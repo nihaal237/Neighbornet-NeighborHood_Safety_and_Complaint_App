@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./",     // Already tried, but keep it
+        "myapp"   // Add the name of the package itself
+    ]
+}
