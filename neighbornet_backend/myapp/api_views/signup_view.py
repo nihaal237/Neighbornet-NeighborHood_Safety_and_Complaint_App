@@ -12,7 +12,7 @@ class SignupAPIView(APIView):
         username = data.get('username')
         email = data.get('email')
         password = data.get('password')
-        phoneNo = data.get('phone_no') 
+        phoneNo = data.get('phoneNo') 
         address = data.get('address')   
 
         # Check for required fields and existing email (since it's unique)

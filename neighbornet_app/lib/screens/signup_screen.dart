@@ -41,17 +41,15 @@ headers: {"Content-Type": "application/json"},
  "username": _usernameController.text.trim(),
 "email": _emailController.text.trim(),
 "password": _passwordController.text.trim(),
-"phoneNo": _phoneController.text.trim(), // <-- FIX: Changed from "phone_no" to "phoneNo"
+"phoneNo": _phoneController.text.trim(), 
 "address": _addressController.text.trim(),
 }),
 );
 
-if (response.statusCode == 201) { // Standard for resource creation
+if (response.statusCode == 201) { 
 final data = json.decode(response.body);
 print("Signup success: $data");
-// Optional: Clear controllers on success
-// _usernameController.clear();
-// ...
+
 Navigator.pushReplacementNamed(context, '/login');
 } else {
  final data = json.decode(response.body);
@@ -60,7 +58,7 @@ setState(() {
 }
 } catch (e) {
  setState(() {
- // Improved error message for connectivity/server down issues
+ 
  _errorMessage = "Connection Error. Check server or URL. Details: $e";
   });
 } finally {
