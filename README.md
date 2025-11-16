@@ -1,17 +1,3 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>NeighborNet - README</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; line-height:1.6; color:#111; padding:20px; max-width:900px; margin:auto; }
-    h1,h2{ color:#0b5cff; }
-    pre { background:#f6f8fa; padding:12px; border-radius:6px; overflow:auto; }
-    ul { margin-top:0; }
-    .muted { color:#555; font-size:0.95em; }
-  </style>
-</head>
 <body>
   <h1>NeighborNet — Neighborhood Safety & Complaint App</h1>
 
