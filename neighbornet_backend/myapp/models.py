@@ -40,23 +40,30 @@ class Admin(models.Model):
 class LocalPoliceAuthority(models.Model):
     user = models.OneToOneField( User, on_delete=models.SET_NULL, null=True,blank=True, related_name="police_profile")
     stationName = models.CharField(max_length=255)
-    contactInfo = models.CharField(max_length=255)
-    areaAssigned = models.CharField(max_length=255)
-
+    
     def __str__(self):
         return self.stationName
 
 
-
 # Report and Evidence
+
+class StatusType(models.TextChoices):
+    Pending = 'Pending', 'Pending'
+    Processing='Processing','Processing'
+    Verified='Verified','Verified'
+    Resolved='Resolved','Resolved'
+    Rejected='Rejected','Rejected'
 
 class Report(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     dateTime = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=100, default="Pending")
-    location = models.CharField(max_length=255)
+    status = models.CharField(max_length=100, choices=StatusType.choices,default=StatusType.Pending)
+    latitude= models.FloatField(null=True, blank=True)
+    longitude=models.FloatField(null=True, blank= True) #added longitude and latitude for the google map coordinates
+    location = models.CharField(max_length=255,null=True, blank=True)
     isAnonymous = models.BooleanField(default=False)
+    isFake= models.BooleanField(default=False) #added isFake variable
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     assignedPolice = models.ForeignKey(LocalPoliceAuthority, on_delete=models.SET_NULL, null=True, blank=True)
@@ -85,6 +92,7 @@ class CommunityPost(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)  #  keep post even if user is deleted
     content = models.TextField()
     dateTime = models.DateTimeField(auto_now_add=True)
+    isHighlighted = models.BooleanField(default=False) #added isHighlighted Variable
 
     def __str__(self):
         username = self.user.username if self.user else "Deleted User"
@@ -104,7 +112,6 @@ class Alert(models.Model):
     message = models.TextField()
     dateTime = models.DateTimeField(auto_now_add=True)
     priority = models.CharField( max_length=10,choices=PriorityType.choices,default=PriorityType.LOW)
-    highlighted = models.BooleanField(default=False)
     users = models.ManyToManyField(User, related_name='alerts', blank=True)
 
     def __str__(self):
