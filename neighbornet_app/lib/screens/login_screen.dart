@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
         final data = json.decode(response.body);
         print("Login success: ${data['token'] ?? data}");
         // Navigate to Home/Dashboard
-        Navigator.pushReplacementNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/userHome');
       } else {
         final data = json.decode(response.body);
         setState(() {
