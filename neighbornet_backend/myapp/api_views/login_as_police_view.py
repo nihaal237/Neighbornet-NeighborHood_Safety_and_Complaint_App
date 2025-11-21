@@ -18,27 +18,33 @@ class LoginasPoliceAPIView(APIView):
         # Authenticate user
         user = authenticate(request, username=email, password=password)
 
-        if user:
-            # Check if user is linked to a LocalPoliceAuthority profile
-            try:
-                police_profile = user.police_profile
-            except LocalPoliceAuthority.DoesNotExist:
-                return Response(
-                    {"error": "User is not registered as a police officer"},
-                    status=status.HTTP_403_FORBIDDEN
-                )
-
-            # Generate JWT tokens
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                "refresh": str(refresh),
-                "access": str(refresh.access_token),
-                "police_station": police_profile.stationName,
-                "area_assigned": police_profile.areaAssigned,
-            }, status=status.HTTP_200_OK)
-
-        else:
+        if user is None:
             return Response(
                 {"error": "Invalid credentials"},
                 status=status.HTTP_401_UNAUTHORIZED
             )
+
+        # 🔥 ROLE CHECK
+        if user.role != "police":
+            return Response(
+                {"error": "Not a police account"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # Check if user has police profile
+        try:
+            police_profile = user.police_profile
+        except LocalPoliceAuthority.DoesNotExist:
+            return Response(
+                {"error": "Police profile not found"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # Generate JWT tokens
+        refresh = RefreshToken.for_user(user)
+
+        return Response({
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+            "police_station": police_profile.stationName,
+        }, status=status.HTTP_200_OK)

@@ -5,7 +5,7 @@ from myapp.models import User, Report
 from myapp.serializers import UserSerializer
 
 class AdminManageUsersAPIView(APIView):
-    """
+    """y
     API endpoint to view users who have at least one rejected report
     and delete a user by ID.
     """

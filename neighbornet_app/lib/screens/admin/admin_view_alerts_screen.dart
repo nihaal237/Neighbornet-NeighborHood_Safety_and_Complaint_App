@@ -35,38 +35,57 @@ class _AdminViewAlertsScreenState extends State<AdminViewAlertsScreen> {
     }
   }
 
+  Future<void> deleteAlert(int id) async {
+    final url = Uri.parse("http://127.0.0.1:8000/admin/alerts/$id/");
+    try {
+      final response = await http.delete(url);
+
+      if (response.statusCode == 204) {
+        // Successfully deleted
+        setState(() => alerts.removeWhere((alert) => alert['id'] == id));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Alert deleted successfully")));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Error deleting alert: ${response.body}")));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Something went wrong: $e")));
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     fetchAlerts();
   }
 
- @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: const Color(0xFFA5BCDF),
-    appBar: AppBar(
-      title: const Text(
-        '🚨 All Alerts', // added emoji
-        style: TextStyle(
-          fontSize: 26, // slightly larger
-          fontWeight: FontWeight.w600, // semi-bold
-          letterSpacing: 1.5, // more spacing
-          color: Colors.white, // ensures text is visible
-          fontStyle: FontStyle.italic, // optional italic
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFA5BCDF),
+      appBar: AppBar(
+        title: const Text(
+          '🚨 All Alerts',
+          style: TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.5,
+            color: Colors.white,
+            fontStyle: FontStyle.italic,
+          ),
         ),
+        backgroundColor: const Color(0xFF5279C7),
+        elevation: 5,
       ),
-      backgroundColor: const Color(0xFF5279C7),
-      elevation: 5,
-    ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : alerts.isEmpty
               ? const Center(
                   child: Text(
                     "No alerts found.",
-                    style: TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 )
               : ListView.builder(
@@ -99,19 +118,28 @@ Widget build(BuildContext context) {
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(alert["message"]),
-                        trailing: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: priorityColor.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            alert["priority"],
-                            style: TextStyle(
-                                color: priorityColor,
-                                fontWeight: FontWeight.bold),
-                          ),
+                        trailing: Wrap(
+                          spacing: 12,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: priorityColor.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                alert["priority"],
+                                style: TextStyle(
+                                    color: priorityColor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => deleteAlert(alert['id']),
+                            ),
+                          ],
                         ),
                       ),
                     );

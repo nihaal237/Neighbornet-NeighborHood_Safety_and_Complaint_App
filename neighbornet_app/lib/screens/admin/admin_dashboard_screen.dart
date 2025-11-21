@@ -285,15 +285,7 @@ class AdminDashboardScreen extends StatelessWidget {
                   );
                 },
               ),
-              _buildHomeCard(
-                icon: Icons.logout,
-                label: "Logout",
-                iconColor: Colors.red,
-                textColor: Colors.red,
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, '/');
-                },
-              ),
+              
             ],
           ),
         ),

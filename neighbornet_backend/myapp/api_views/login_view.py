@@ -9,12 +9,28 @@ class LoginAPIView(APIView):
         email = request.data.get('email')
         password = request.data.get('password')
 
+        # Authenticate user
         user = authenticate(request, username=email, password=password)
-        if user:
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                "refresh": str(refresh),
-                "access": str(refresh.access_token),
-            }, status=status.HTTP_200_OK)
-        else:
-            return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # Wrong password or no such user
+        if user is None:
+            return Response(
+                {"error": "Invalid credentials"},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        # 🔥 ROLE CHECK: Only allow normal users
+        if user.role != "user":
+            return Response(
+                {"error": "Only user accounts can log in here"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # Generate JWT tokens for the user
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+            "username": user.username,
+            "email": user.email,
+        }, status=status.HTTP_200_OK)
