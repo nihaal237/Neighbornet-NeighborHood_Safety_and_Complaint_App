@@ -2,29 +2,37 @@
 from rest_framework import serializers
 from .models import Report, Evidence, StatusType
 
-
 class EvidenceSerializer(serializers.ModelSerializer):
-    """
-    Serializer for Evidence model. Provides an absolute file URL when `request`
-    is passed in serializer context (useful for frontend to open/download files).
-    """
     file_url = serializers.SerializerMethodField()
+    is_text = serializers.SerializerMethodField()
 
     class Meta:
         model = Evidence
-        fields = ['id', 'file_url', 'timestamp']
+        fields = ['id', 'file_url', 'timestamp', 'is_text']
 
     def get_file_url(self, obj):
         if not obj.file:
             return None
         request = self.context.get('request')
-        # if request available, build absolute uri, otherwise return relative url
+        
+        # Convert file.url to string
+        file_url = str(obj.file.url)
+
+        # Remove double 'evidences/' if exists
+        if file_url.startswith('/evidences/evidences/'):
+            file_url = file_url.replace('/evidences/evidences/', '/evidences/')
+
         if request:
-            try:
-                return request.build_absolute_uri(obj.file.url)
-            except Exception:
-                return obj.file.url
-        return obj.file.url
+            return request.build_absolute_uri(file_url)
+
+        # fallback if no request in context
+        return f"http://127.0.0.1:8000{file_url}"
+
+    def get_is_text(self, obj):
+        # detect if file is a text file
+        if obj.file and str(obj.file.name).endswith('.txt'):
+            return True
+        return False
 
 
 class ReportSerializer(serializers.ModelSerializer):

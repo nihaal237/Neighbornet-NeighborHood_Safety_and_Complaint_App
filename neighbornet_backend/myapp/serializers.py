@@ -12,3 +12,4 @@ class AlertSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alert
         fields = ['id', 'title', 'message', 'dateTime', 'priority', 'users']
+        

@@ -8,6 +8,7 @@ import 'screens/police_dashboard_screen.dart';
 import 'screens/police_update_profile_screen.dart';
 import 'screens/police_alerts_screen.dart';
 import 'screens/user_home_screen.dart';
+import 'screens/police_report_screen.dart'; // ✅ Added
 
 void main() {
   runApp(const MyApp());
@@ -28,10 +29,10 @@ class MyApp extends StatelessWidget {
         '/adminLogin': (context) => const LoginAsAdminScreen(),
         '/policeLogin': (context) => const LoginAsPoliceScreen(),
         '/policeUpdateProfile': (context) => const PoliceUpdateProfileScreen(
-              accessToken: '', 
+              accessToken: '',
               currentEmail: 'police@example.com',
             ),
-        // Do NOT add PoliceDashboardScreen here because token/email are dynamic
+        '/userHome': (context) => const UserHomeScreen(),
       },
       onGenerateRoute: (settings) {
         // Dynamic routing for screens that need token/email
@@ -50,11 +51,13 @@ class MyApp extends StatelessWidget {
             builder: (_) => PoliceAlertsScreen(token: args['token']),
           );
         }
-        return null;
-=======
-        '/policeLogin': (context) =>const LoginAsPoliceScreen(),
-        '/userHome': (context) => const UserHomeScreen(),
->>>>>>> 026e5c95a10e902ab0d2d85e9a9e04fac4e8ea7f
+        if (settings.name == '/policeReports') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (_) => PoliceReportsScreen(accessToken: args['token']),
+          );
+        }
+        return null; // fallback for unknown routes
       },
     );
   }

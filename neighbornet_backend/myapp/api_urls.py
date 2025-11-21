@@ -5,6 +5,11 @@ from myapp.api_views.login_as_admin_view import *
 from myapp.api_views.login_as_police_view import *
 from myapp.api_views.police_update_profile_view import PoliceUpdateProfileAPIView
 from myapp.api_views.police_alert_view import PoliceAlertView
+from myapp.api_views.report_views import (
+    PoliceReportListAPIView,
+    PoliceReportDetailAPIView,
+    PoliceUpdateReportStatusAPIView
+)
 
 
 urlpatterns = [
@@ -15,6 +20,8 @@ urlpatterns = [
     path('police/update-profile/', PoliceUpdateProfileAPIView.as_view(), name='police-update-profile-api'),
     path('api/police/alerts/', PoliceAlertView.as_view(), name='police-alerts'),
 
-
+    path('police/reports/', PoliceReportListAPIView.as_view(), name='police-reports-list'),
+    path('police/reports/<int:pk>/', PoliceReportDetailAPIView.as_view(), name='police-reports-detail'),
+    path('police/reports/<int:pk>/status/', PoliceUpdateReportStatusAPIView.as_view(), name='police-update-report-status'),
 
 ]

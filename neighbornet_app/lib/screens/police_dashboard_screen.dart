@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'police_alerts_screen.dart'; // import your alerts screen
+import 'police_alerts_screen.dart'; // alerts
+import 'police_report_screen.dart'; // ✅ reports
 
 class PoliceDashboardScreen extends StatelessWidget {
   final String accessToken;
@@ -14,7 +15,6 @@ class PoliceDashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       // ---------------------- APP BAR ----------------------
       appBar: AppBar(
         title: const Text(
@@ -58,7 +58,6 @@ class PoliceDashboardScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             Container(
               color: Colors.white,
               child: Column(
@@ -76,8 +75,11 @@ class PoliceDashboardScreen extends StatelessWidget {
                     text: "View All Reports",
                     textColor: Colors.black,
                     iconColor: Colors.black,
-                    onTap: () =>
-                        Navigator.pushNamed(context, '/viewReports'),
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      '/policeReports',
+                      arguments: {'token': accessToken},
+                    ),
                   ),
                   _drawerTile(
                     icon: Icons.map,
@@ -107,15 +109,13 @@ class PoliceDashboardScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   const Divider(color: Colors.grey),
-
                   _drawerTile(
                     icon: Icons.logout,
                     text: "Logout",
                     textColor: Colors.redAccent,
                     iconColor: Colors.redAccent,
-                    onTap: () => Navigator.pushReplacementNamed(context, '/policeLogin'),
+                    onTap: () => Navigator.pushReplacementNamed(context, '/'),
                   ),
                 ],
               ),
@@ -143,7 +143,11 @@ class PoliceDashboardScreen extends StatelessWidget {
               _homeCard(
                 icon: Icons.report,
                 label: "View Reports",
-                onTap: () => Navigator.pushNamed(context, '/viewReports'),
+                onTap: () => Navigator.pushNamed(
+                  context,
+                  '/policeReports',
+                  arguments: {'token': accessToken},
+                ),
               ),
               _homeCard(
                 icon: Icons.map,
