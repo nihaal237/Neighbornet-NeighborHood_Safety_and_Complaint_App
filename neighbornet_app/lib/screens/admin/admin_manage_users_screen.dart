@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AdminManageUsersScreen extends StatefulWidget {
-   AdminManageUsersScreen({super.key});
+  const  AdminManageUsersScreen({super.key});
 
   @override
   State<AdminManageUsersScreen> createState() => _AdminManageUsersScreenState();
@@ -136,10 +136,7 @@ class _AdminManageUsersScreenState extends State<AdminManageUsersScreen> {
                           trailing: Wrap(
                             spacing: 12,
                             children: [
-                              IconButton(
-                                icon: const Icon(Icons.edit, color: Colors.blue, size: 28),
-                                onPressed: () => editUser(user),
-                              ),
+                             
                               IconButton(
                                 icon: const Icon(Icons.delete, color: Colors.red, size: 28),
                                 onPressed: () {
