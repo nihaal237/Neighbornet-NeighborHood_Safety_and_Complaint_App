@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Alert
+from .models import User, Alert,Report,CommunityPost
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -30,3 +30,19 @@ class AdminProfileSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+class ReportSerializer(serializers.ModelSerializer):
+    user_deleted = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Report
+        fields = ['id', 'title', 'status', 'isAnonymous', 'user_deleted']
+
+    def get_user_deleted(self, obj):
+        return obj.user is None
+
+
+
+class CommunityPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommunityPost
+        fields = ['id', 'user', 'content', 'dateTime', 'isHighlighted']

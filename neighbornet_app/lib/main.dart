@@ -1,28 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/login_as_admin_screen.dart';
 import 'screens/login_as_police_screen.dart';
 import 'screens/admin/admin_dashboard_screen.dart';
+import 'theme_provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColor: const Color(0xFF5279C7),
+        scaffoldBackgroundColor: const Color(0xFFE2EBF7),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: const Color(0xFF5279C7),
+        scaffoldBackgroundColor: const Color(0xFF1F1F1F),
+      ),
+      themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       initialRoute: '/',
       routes: {
-        '/': (context) => HomeScreen(),
-        '/login': (context) => LoginScreen(),
-        '/signup': (context) => SignupScreen(),
-        '/adminLogin': (context) => LoginAsAdminScreen(),
-        '/policeLogin': (context) => LoginAsPoliceScreen(),
-        '/adminDashboard': (context) => AdminDashboardScreen(),
+        '/': (context) => const HomeScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/signup': (context) => const SignupScreen(),
+        '/adminLogin': (context) => LoginAsAdminScreen(), // removed const
+        '/policeLogin': (context) => const LoginAsPoliceScreen(),
+        '/adminDashboard': (context) => const AdminDashboardScreen(),
       },
     );
   }

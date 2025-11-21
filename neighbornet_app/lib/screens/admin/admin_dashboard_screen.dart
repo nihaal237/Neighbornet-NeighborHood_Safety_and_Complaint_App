@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'admin_create_alert_screen.dart';
 import 'admin_view_alerts_screen.dart';
-import 'manage_profile_screen.dart'; // new import
-import '../login_screen.dart'; 
+import 'admin_manage_users_screen.dart';
+import 'admin_view_all_users_screen.dart';
+import 'manage_profile_screen.dart';
+import 'admin_search_reports_screen.dart';
+import '../login_screen.dart';
+import 'admin_select_theme_screen.dart'; 
+import 'admin_highlight_posts_screen.dart';
 
 class AdminDashboardScreen extends StatelessWidget {
   const AdminDashboardScreen({super.key});
@@ -19,7 +25,7 @@ class AdminDashboardScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.white,
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black26,
                     blurRadius: 4,
@@ -28,23 +34,24 @@ class AdminDashboardScreen extends StatelessWidget {
                 ],
               ),
               padding: const EdgeInsets.all(6),
-              child: const Icon(Icons.admin_panel_settings, size: 28, color: Color(0xFF5279C7)),
+              child: const Icon(Icons.admin_panel_settings,
+                  size: 28, color: Color(0xFF5279C7)),
             ),
             const SizedBox(width: 12),
-            Text(
+            const Text(
               "NeighborNet Admin",
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.2,
-                shadows: const [
+                color: Colors.white,
+                shadows: [
                   Shadow(offset: Offset(1, 1), blurRadius: 2, color: Colors.black26),
                 ],
-                color: Colors.white,
               ),
             ),
             const SizedBox(width: 4),
-            Text(
+            const Text(
               "Dashboard",
               style: TextStyle(
                 fontSize: 18,
@@ -74,7 +81,8 @@ class AdminDashboardScreen extends StatelessWidget {
                   CircleAvatar(
                     radius: 32,
                     backgroundColor: Colors.white,
-                    child: Icon(Icons.admin_panel_settings, size: 40, color: Color(0xFF5279C7)),
+                    child: Icon(Icons.admin_panel_settings,
+                        size: 40, color: Color(0xFF5279C7)),
                   ),
                   SizedBox(height: 12),
                   Text(
@@ -95,7 +103,7 @@ class AdminDashboardScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const AdminCreateAlertScreen()),
+                  MaterialPageRoute(builder: (_) => AdminCreateAlertScreen()),
                 );
               },
             ),
@@ -105,7 +113,37 @@ class AdminDashboardScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const AdminViewAlertsScreen()),
+                  MaterialPageRoute(builder: (_) => AdminViewAlertsScreen()),
+                );
+              },
+            ),
+            _buildDrawerItem(
+              icon: Icons.group,
+              label: "Manage Fake Users",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => AdminManageUsersScreen()),
+                );
+              },
+            ),
+            _buildDrawerItem(
+              icon: Icons.visibility,
+              label: "View All Users",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => AdminViewAllUsersScreen()),
+                );
+              },
+            ),
+            _buildDrawerItem(
+              icon: Icons.search,
+              label: "Search Reports",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => AdminSearchReportsScreen()),
                 );
               },
             ),
@@ -115,7 +153,27 @@ class AdminDashboardScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const ManageProfileScreen()),
+                  MaterialPageRoute(builder: (_) => ManageProfileScreen()),
+                );
+              },
+            ),
+            _buildDrawerItem(
+               icon: Icons.star,
+               label: "Highlight Posts",
+              onTap: () {
+                 Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => AdminHighlightPostsScreen()),
+                );
+              },
+            ),
+            _buildDrawerItem(
+              icon: Icons.brightness_6,
+              label: "Select Theme",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => AdminSelectThemeScreen()),
                 );
               },
             ),
@@ -126,7 +184,7 @@ class AdminDashboardScreen extends StatelessWidget {
               iconColor: Colors.red,
               textColor: Colors.red,
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/'); // redirects to /login
+                Navigator.pushReplacementNamed(context, '/');
               },
             ),
           ],
@@ -153,7 +211,7 @@ class AdminDashboardScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminCreateAlertScreen()),
+                    MaterialPageRoute(builder: (_) => AdminCreateAlertScreen()),
                   );
                 },
               ),
@@ -163,7 +221,37 @@ class AdminDashboardScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminViewAlertsScreen()),
+                    MaterialPageRoute(builder: (_) => AdminViewAlertsScreen()),
+                  );
+                },
+              ),
+              _buildHomeCard(
+                icon: Icons.group,
+                label: "Manage Fake Users",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => AdminManageUsersScreen()),
+                  );
+                },
+              ),
+              _buildHomeCard(
+                icon: Icons.visibility,
+                label: "View All Users",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => AdminViewAllUsersScreen()),
+                  );
+                },
+              ),
+              _buildHomeCard(
+                icon: Icons.search,
+                label: "Search Reports",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => AdminSearchReportsScreen()),
                   );
                 },
               ),
@@ -173,8 +261,37 @@ class AdminDashboardScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const ManageProfileScreen()),
+                    MaterialPageRoute(builder: (_) => ManageProfileScreen()),
                   );
+                },
+              ),
+              _buildHomeCard(
+                 icon: Icons.star,
+                 label: "Highlight Posts",
+                 onTap: () {
+                   Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => AdminHighlightPostsScreen()),
+                  );
+               },
+              ),
+              _buildHomeCard(
+                icon: Icons.color_lens,
+                label: "Select Theme",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => AdminSelectThemeScreen()),
+                  );
+                },
+              ),
+              _buildHomeCard(
+                icon: Icons.logout,
+                label: "Logout",
+                iconColor: Colors.red,
+                textColor: Colors.red,
+                onTap: () {
+                  Navigator.pushReplacementNamed(context, '/');
                 },
               ),
             ],
@@ -184,7 +301,7 @@ class AdminDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDrawerItem({
+  static Widget _buildDrawerItem({
     required IconData icon,
     required String label,
     required VoidCallback onTap,
@@ -193,15 +310,23 @@ class AdminDashboardScreen extends StatelessWidget {
   }) {
     return ListTile(
       leading: Icon(icon, color: iconColor),
-      title: Text(label, style: TextStyle(color: textColor, fontWeight: FontWeight.w600)),
+      title: Text(
+        label,
+        style: TextStyle(
+          color: textColor,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
       onTap: onTap,
     );
   }
 
-  Widget _buildHomeCard({
+  static Widget _buildHomeCard({
     required IconData icon,
     required String label,
     required VoidCallback onTap,
+    Color iconColor = const Color(0xFF5279C7),
+    Color textColor = const Color(0xFF303030),
   }) {
     return InkWell(
       onTap: onTap,
@@ -230,19 +355,19 @@ class AdminDashboardScreen extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF5279C7).withOpacity(0.1),
+                color: iconColor.withOpacity(0.1),
               ),
               padding: const EdgeInsets.all(12),
-              child: Icon(icon, size: 48, color: const Color(0xFF5279C7)),
+              child: Icon(icon, size: 48, color: iconColor),
             ),
             const SizedBox(height: 15),
             Text(
               label,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF303030),
+                color: textColor,
               ),
             ),
           ],

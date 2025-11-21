@@ -5,7 +5,18 @@ from myapp.api_views.login_as_admin_view import *
 from myapp.api_views.login_as_police_view import *
 from myapp.api_views.admin_alerts_view import *
 from myapp.api_views.admin_profile_view import AdminProfileAPIView
-
+from myapp.api_views.admin_manage_users_view import AdminManageUsersAPIView
+from myapp.api_views.admin_view_users_view import AdminViewUsersAPIView
+from myapp.api_views.admin_user_reports_view import (
+    AllReportsAPIView,
+    AnonymousReportsAPIView,
+    DeletedUserReportsAPIView,
+    SpecificUserReportsAPIView
+)
+from myapp.api_views.admin_highlight_posts_view import (
+    AdminListCommunityPostsAPIView,
+    AdminHighlightPostAPIView
+)
 
 urlpatterns = [
     path('login/', LoginAPIView.as_view(), name='login-api'),
@@ -14,4 +25,14 @@ urlpatterns = [
     path('police/login/', LoginasPoliceAPIView.as_view(), name='login-as-police-api'),
     path('admin/alerts/', AdminAlertAPIView.as_view(), name='admin-alerts'),
     path('admin/profile/', AdminProfileAPIView.as_view(), name='admin-profile'),
+    path('admin/manage-users/', AdminManageUsersAPIView.as_view(), name='admin-manage-users'),
+    path('admin/manage-users/<int:user_id>/', AdminManageUsersAPIView.as_view(), name='admin-delete-user'),
+    path('admin/view-users/', AdminViewUsersAPIView.as_view(), name='admin-view-users'),
+    path('admin/all-reports/', AllReportsAPIView.as_view(), name='all-reports'),
+    path('admin/anonymous-reports/', AnonymousReportsAPIView.as_view(), name='anonymous-reports'),
+    path('admin/deleted-user-reports/', DeletedUserReportsAPIView.as_view(), name='deleted-user-reports'),
+    path('admin/user-reports/<int:user_id>/', SpecificUserReportsAPIView.as_view(), name='specific-user-reports'),
+    path('admin/community-posts/', AdminListCommunityPostsAPIView.as_view(), name='admin-community-posts'),
+    path('admin/community-posts/<int:post_id>/highlight/', AdminHighlightPostAPIView.as_view(), name='admin-highlight-post'),
+
 ]
