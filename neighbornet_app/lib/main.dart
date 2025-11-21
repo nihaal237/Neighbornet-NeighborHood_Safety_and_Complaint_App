@@ -45,22 +45,14 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const HomeScreen(),
         '/login': (context) => const LoginScreen(),
-<<<<<<< HEAD
         '/signup': (context) => const SignupScreen(),
         '/adminLogin': (context) => LoginAsAdminScreen(), // removed const
         '/policeLogin': (context) => const LoginAsPoliceScreen(),
         '/adminDashboard': (context) => const AdminDashboardScreen(),
         '/userHome':(context)=>const UserHomeScreen(),
         '/profile':(context)=>const ProfileScreen(),
-=======
-        '/signup': (context)=> const SignupScreen(),
-        '/adminLogin': (context) => const LoginAsAdminScreen(),
-        '/policeLogin': (context) =>const LoginAsPoliceScreen(),
-        '/userHome': (context) => const UserHomeScreen(),
-        '/profile': (context) => ProfileScreen(),
         '/communityBoard': (context) => CommunityBoardScreen(),
         '/createPost': (context) => const CreateCommunityPostScreen(),
->>>>>>> 45f3b8f1ba8b147eb232bed99497aabd1477aa0d
       },
     );
   }
