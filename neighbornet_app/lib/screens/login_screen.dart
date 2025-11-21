@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -42,6 +43,10 @@ class _LoginScreenState extends State<LoginScreen> {
         final data = json.decode(response.body);
         print("Login success: ${data['token'] ?? data}");
         // Navigate to Home/Dashboard
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString("access", data["access"]);
+        await prefs.setString("refresh", data["refresh"]);
+
         Navigator.pushReplacementNamed(context, '/userHome');
       } else {
         final data = json.decode(response.body);
