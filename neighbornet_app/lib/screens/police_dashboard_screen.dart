@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'police_alerts_screen.dart'; // alerts
-import 'police_report_screen.dart'; // ✅ reports
+import 'police_alerts_screen.dart';
+import 'police_report_screen.dart';
+import 'police_communityboard_screen.dart';
 
 class PoliceDashboardScreen extends StatelessWidget {
   final String accessToken;
@@ -15,7 +16,6 @@ class PoliceDashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // ---------------------- APP BAR ----------------------
       appBar: AppBar(
         title: const Text(
           "NeighborNet Police Dashboard",
@@ -24,15 +24,12 @@ class PoliceDashboardScreen extends StatelessWidget {
         backgroundColor: const Color(0xFF1E3A8A),
       ),
 
-      // ---------------------- DRAWER ----------------------
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Color(0xFF1E3A8A),
-              ),
+              decoration: const BoxDecoration(color: Color(0xFF1E3A8A)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -44,17 +41,10 @@ class PoliceDashboardScreen extends StatelessWidget {
                   const SizedBox(height: 12),
                   const Text(
                     "Welcome, Police",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    currentEmail,
-                    style: const TextStyle(color: Colors.white70, fontSize: 14),
-                  ),
+                  Text(currentEmail, style: const TextStyle(color: Colors.white70, fontSize: 14)),
                 ],
               ),
             ),
@@ -67,8 +57,7 @@ class PoliceDashboardScreen extends StatelessWidget {
                     text: "Manage Profile",
                     textColor: Colors.black,
                     iconColor: Colors.black,
-                    onTap: () =>
-                        Navigator.pushNamed(context, '/policeUpdateProfile'),
+                    onTap: () => Navigator.pushNamed(context, '/policeUpdateProfile'),
                   ),
                   _drawerTile(
                     icon: Icons.report,
@@ -86,16 +75,17 @@ class PoliceDashboardScreen extends StatelessWidget {
                     text: "View Area Statistics",
                     textColor: Colors.black,
                     iconColor: Colors.black,
-                    onTap: () =>
-                        Navigator.pushNamed(context, '/areaStats'),
+                    onTap: () => Navigator.pushNamed(context, '/areaStats'),
                   ),
                   _drawerTile(
                     icon: Icons.group,
                     text: "Community Board",
                     textColor: Colors.black,
                     iconColor: Colors.black,
-                    onTap: () =>
-                        Navigator.pushNamed(context, '/communityBoard'),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CommunityBoardScreen(accessToken: accessToken)),
+                    ),
                   ),
                   _drawerTile(
                     icon: Icons.notifications,
@@ -104,9 +94,7 @@ class PoliceDashboardScreen extends StatelessWidget {
                     iconColor: Colors.black,
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => PoliceAlertsScreen(token: accessToken),
-                      ),
+                      MaterialPageRoute(builder: (context) => PoliceAlertsScreen(token: accessToken)),
                     ),
                   ),
                   const Divider(color: Colors.grey),
@@ -124,10 +112,8 @@ class PoliceDashboardScreen extends StatelessWidget {
         ),
       ),
 
-      // ---------------------- BACKGROUND ----------------------
       backgroundColor: const Color(0xFFC7D8F5),
 
-      // ---------------------- BODY GRID ----------------------
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -157,16 +143,17 @@ class PoliceDashboardScreen extends StatelessWidget {
               _homeCard(
                 icon: Icons.group,
                 label: "Community Board",
-                onTap: () => Navigator.pushNamed(context, '/communityBoard'),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CommunityBoardScreen(accessToken: accessToken)),
+                ),
               ),
               _homeCard(
                 icon: Icons.notifications,
                 label: "Alerts",
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => PoliceAlertsScreen(token: accessToken),
-                  ),
+                  MaterialPageRoute(builder: (context) => PoliceAlertsScreen(token: accessToken)),
                 ),
               ),
             ],
@@ -176,7 +163,6 @@ class PoliceDashboardScreen extends StatelessWidget {
     );
   }
 
-  // ---------------------- DRAWER TILE ----------------------
   Widget _drawerTile({
     required IconData icon,
     required String text,
@@ -186,19 +172,11 @@ class PoliceDashboardScreen extends StatelessWidget {
   }) {
     return ListTile(
       leading: Icon(icon, color: iconColor),
-      title: Text(
-        text,
-        style: TextStyle(
-          color: textColor,
-          fontWeight: FontWeight.w600,
-          fontSize: 15,
-        ),
-      ),
+      title: Text(text, style: TextStyle(color: textColor, fontWeight: FontWeight.w600, fontSize: 15)),
       onTap: onTap,
     );
   }
 
-  // ---------------------- HOME CARD ----------------------
   Widget _homeCard({
     required IconData icon,
     required String label,
@@ -213,28 +191,14 @@ class PoliceDashboardScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 6,
-              offset: Offset(3, 3),
-            )
-          ],
+          boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(3, 3))],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 40, color: const Color(0xFF1E3A8A)),
             const SizedBox(height: 10),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF303030),
-              ),
-            ),
+            Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF303030))),
           ],
         ),
       ),

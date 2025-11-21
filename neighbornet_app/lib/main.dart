@@ -8,7 +8,8 @@ import 'screens/police_dashboard_screen.dart';
 import 'screens/police_update_profile_screen.dart';
 import 'screens/police_alerts_screen.dart';
 import 'screens/user_home_screen.dart';
-import 'screens/police_report_screen.dart'; // ✅ Added
+import 'screens/police_report_screen.dart';
+import 'screens/police_communityboard_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: '/policeLogin',
+
       routes: {
         '/': (context) => const HomeScreen(),
         '/login': (context) => const LoginScreen(),
@@ -34,8 +36,9 @@ class MyApp extends StatelessWidget {
             ),
         '/userHome': (context) => const UserHomeScreen(),
       },
+
       onGenerateRoute: (settings) {
-        // Dynamic routing for screens that need token/email
+        // Dynamic routing for screens needing token/email
         if (settings.name == '/policeDashboard') {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
@@ -57,7 +60,14 @@ class MyApp extends StatelessWidget {
             builder: (_) => PoliceReportsScreen(accessToken: args['token']),
           );
         }
-        return null; // fallback for unknown routes
+        if (settings.name == '/communityBoard') {
+          final args = settings.arguments as Map<String, dynamic>?;
+          final token = args != null ? args['token'] : '';
+          return MaterialPageRoute(
+            builder: (_) => CommunityBoardScreen(accessToken: token),
+          );
+        }
+        return null;
       },
     );
   }

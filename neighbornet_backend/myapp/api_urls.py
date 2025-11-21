@@ -10,7 +10,7 @@ from myapp.api_views.report_views import (
     PoliceReportDetailAPIView,
     PoliceUpdateReportStatusAPIView
 )
-
+from myapp.api_views.police_communitypost_view import PoliceCommunityBoardView
 
 urlpatterns = [
     path('login/', LoginAPIView.as_view(), name='login-api'),
@@ -23,5 +23,5 @@ urlpatterns = [
     path('police/reports/', PoliceReportListAPIView.as_view(), name='police-reports-list'),
     path('police/reports/<int:pk>/', PoliceReportDetailAPIView.as_view(), name='police-reports-detail'),
     path('police/reports/<int:pk>/status/', PoliceUpdateReportStatusAPIView.as_view(), name='police-update-report-status'),
-
+    path('police/community-board/', PoliceCommunityBoardView.as_view(), name='police-community-board'),
 ]
