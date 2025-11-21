@@ -7,6 +7,7 @@ import 'screens/login_as_police_screen.dart';
 import 'screens/police_dashboard_screen.dart';
 import 'screens/police_update_profile_screen.dart';
 import 'screens/police_alerts_screen.dart';
+import 'screens/user_home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         '/adminLogin': (context) => const LoginAsAdminScreen(),
         '/policeLogin': (context) => const LoginAsPoliceScreen(),
         '/policeUpdateProfile': (context) => const PoliceUpdateProfileScreen(
-              accessToken: '', // placeholder, replaced dynamically
+              accessToken: '', 
               currentEmail: 'police@example.com',
             ),
         // Do NOT add PoliceDashboardScreen here because token/email are dynamic
@@ -50,6 +51,10 @@ class MyApp extends StatelessWidget {
           );
         }
         return null;
+=======
+        '/policeLogin': (context) =>const LoginAsPoliceScreen(),
+        '/userHome': (context) => const UserHomeScreen(),
+>>>>>>> 026e5c95a10e902ab0d2d85e9a9e04fac4e8ea7f
       },
     );
   }
