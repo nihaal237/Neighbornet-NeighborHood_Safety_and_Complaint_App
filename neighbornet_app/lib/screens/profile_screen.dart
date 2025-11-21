@@ -4,89 +4,112 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+const ProfileScreen({super.key});
 
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+@override
+State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final TextEditingController _username = TextEditingController();
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _phoneNo = TextEditingController();
-  final TextEditingController _address = TextEditingController();
-  final TextEditingController _password = TextEditingController();
+final TextEditingController _username = TextEditingController();
+final TextEditingController _email = TextEditingController();
+final TextEditingController _phoneNo = TextEditingController();
+final TextEditingController _address = TextEditingController();
+final TextEditingController _password = TextEditingController();
 
-  bool _isLoading = false;
-  bool _saving = false;
+bool _isLoading = false;
+bool _saving = false;
 
-  String? token;
+String? token;
 
-  final profileUrl = "http://127.0.0.1:8000/user/profile/";
-  final updateUrl = "http://127.0.0.1:8000/user/profile/update/";
+final String profileUrl = "[http://127.0.0.1:8000/user/profile/](http://127.0.0.1:8000/user/profile/)";
+final String updateUrl = "[http://127.0.0.1:8000/user/profile/update/](http://127.0.0.1:8000/user/profile/update/)";
 
-  Map<String, dynamic> errors = {};
+Map<String, dynamic> errors = {};
 
-  @override
-  void initState() {
-    super.initState();
-    _loadTokenAndFetchProfile();
+@override
+void initState() {
+super.initState();
+_loadTokenAndFetchProfile();
+}
+
+Future<void> _loadTokenAndFetchProfile() async {
+try {
+SharedPreferences prefs = await SharedPreferences.getInstance();
+token = prefs.getString("access");
+
+
+  if (token == null) {
+    Navigator.pushReplacementNamed(context, '/login');
+    return;
   }
 
-  Future<void> _loadTokenAndFetchProfile() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    token = prefs.getString("access");
+  await _fetchProfile();
+} catch (e) {
+  print("Error loading token: $e");
+}
 
-    if (token == null) {
-      Navigator.pushReplacementNamed(context, '/login');
-      return;
-    }
 
-    _fetchProfile();
-  }
+}
 
-  Future<void> _fetchProfile() async {
-    setState(() => _isLoading = true);
+Future<void> _fetchProfile() async {
+setState(() => _isLoading = true);
+try {
+final response = await http.get(
+Uri.parse(profileUrl),
+headers: {"Authorization": "Bearer $token"},
+);
 
-    final response = await http.get(
-      Uri.parse(profileUrl),
-      headers: {"Authorization": "Bearer $token"},
-    );
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
+  if (response.statusCode == 200) {
+    if (response.headers['content-type']?.contains('application/json') ?? false) {
+      final data = json.decode(response.body) as Map<String, dynamic>;
       _username.text = data["username"] ?? "";
       _email.text = data["email"] ?? "";
       _phoneNo.text = data["phoneNo"] ?? "";
       _address.text = data["address"] ?? "";
+    } else {
+      print("Expected JSON but got: ${response.body}");
     }
-
-    setState(() => _isLoading = false);
+  } else if (response.statusCode == 401) {
+    Navigator.pushReplacementNamed(context, '/login');
+  } else {
+    print("Error fetching profile: ${response.statusCode}");
   }
+} catch (e) {
+  print("Failed to fetch profile: $e");
+} finally {
+  setState(() => _isLoading = false);
+}
 
-  Future<void> _updateProfile() async {
-    setState(() {
-      _saving = true;
-      errors = {};
-    });
 
-    final response = await http.put(
-      Uri.parse(updateUrl),
-      headers: {
-        "Authorization": "Bearer $token",
-        "Content-Type": "application/json",
-      },
-      body: json.encode({
-        "username": _username.text.trim(),
-        "email": _email.text.trim(),
-        "phoneNo": _phoneNo.text.trim(),
-        "address": _address.text.trim(),
-        "password": _password.text.trim().isEmpty ? null : _password.text.trim(),
-      }),
-    );
+}
 
-    final data = json.decode(response.body);
+Future<void> _updateProfile() async {
+setState(() {
+_saving = true;
+errors = {};
+});
 
+
+try {
+  final response = await http.put(
+    Uri.parse(updateUrl),
+    headers: {
+      "Authorization": "Bearer $token",
+      "Content-Type": "application/json",
+    },
+    body: json.encode({
+      "username": _username.text.trim(),
+      "email": _email.text.trim(),
+      "phoneNo": _phoneNo.text.trim(),
+      "address": _address.text.trim(),
+      "password": _password.text.trim().isEmpty ? null : _password.text.trim(),
+    }),
+  );
+
+  if (response.headers['content-type']?.contains('application/json') ?? false) {
+    final data = json.decode(response.body) as Map<String, dynamic>;
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Profile updated successfully!")),
@@ -95,114 +118,112 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() => errors = data["errors"] ?? {});
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $data")),
+        SnackBar(content: Text("Unexpected error: ${response.body}")),
       );
     }
-
-    setState(() => _saving = false);
+  } else {
+    print("Expected JSON but got: ${response.body}");
   }
+} catch (e) {
+  print("Failed to update profile: $e");
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text("Failed to update profile. Please try again.")),
+  );
+} finally {
+  setState(() => _saving = false);
+}
 
-  Widget _errorText(String field) {
-    if (!errors.containsKey(field)) return const SizedBox.shrink();
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Text(
-        errors[field],
-        style: const TextStyle(color: Colors.red),
-      ),
-    );
-  }
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Manage Profile"),
-        backgroundColor: const Color(0xFF5279C7),
-      ),
+Widget _errorText(String field) {
+if (!errors.containsKey(field)) return const SizedBox.shrink();
+return Padding(
+padding: const EdgeInsets.only(bottom: 6),
+child: Text(
+errors[field] ?? '',
+style: const TextStyle(color: Colors.red),
+),
+);
+}
 
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  
-                  // Username
-                  _errorText("username"),
-                  TextField(
-                    controller: _username,
-                    decoration: const InputDecoration(
-                      labelText: "Username",
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-
-                  // Email
-                  _errorText("email"),
-                  TextField(
-                    controller: _email,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: "Email",
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-
-                  // Phone
-                  _errorText("phoneNo"),
-                  TextField(
-                    controller: _phoneNo,
-                    keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(
-                      labelText: "Phone Number (03XXXXXXXXX)",
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-
-                  // Address
-                  _errorText("address"),
-                  TextField(
-                    controller: _address,
-                    decoration: const InputDecoration(
-                      labelText: "Address",
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-
-                  // Password
-                  _errorText("password"),
-                  TextField(
-                    controller: _password,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: "New Password (optional)",
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 25),
-
-                  _saving
-                      ? const CircularProgressIndicator()
-                      : ElevatedButton(
-                          onPressed: _updateProfile,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF5279C7),
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 15,
-                              horizontal: 40,
-                            ),
-                          ),
-                          child: const Text("Save Changes"),
-                        ),
-                ],
-              ),
-            ),
-    );
-  }
+@override
+Widget build(BuildContext context) {
+return Scaffold(
+appBar: AppBar(
+title: const Text("Manage Profile"),
+backgroundColor: const Color(0xFF5279C7),
+),
+body: _isLoading
+? const Center(child: CircularProgressIndicator())
+: SingleChildScrollView(
+padding: const EdgeInsets.all(20),
+child: Column(
+children: [
+_errorText("username"),
+TextField(
+controller: _username,
+decoration: const InputDecoration(
+labelText: "Username",
+border: OutlineInputBorder(),
+),
+),
+const SizedBox(height: 15),
+_errorText("email"),
+TextField(
+controller: _email,
+keyboardType: TextInputType.emailAddress,
+decoration: const InputDecoration(
+labelText: "Email",
+border: OutlineInputBorder(),
+),
+),
+const SizedBox(height: 15),
+_errorText("phoneNo"),
+TextField(
+controller: _phoneNo,
+keyboardType: TextInputType.phone,
+decoration: const InputDecoration(
+labelText: "Phone Number (03XXXXXXXXX)",
+border: OutlineInputBorder(),
+),
+),
+const SizedBox(height: 15),
+_errorText("address"),
+TextField(
+controller: _address,
+decoration: const InputDecoration(
+labelText: "Address",
+border: OutlineInputBorder(),
+),
+),
+const SizedBox(height: 15),
+_errorText("password"),
+TextField(
+controller: _password,
+obscureText: true,
+decoration: const InputDecoration(
+labelText: "New Password (optional)",
+border: OutlineInputBorder(),
+),
+),
+const SizedBox(height: 25),
+_saving
+? const CircularProgressIndicator()
+: ElevatedButton(
+onPressed: _updateProfile,
+style: ElevatedButton.styleFrom(
+backgroundColor: const Color(0xFF5279C7),
+padding: const EdgeInsets.symmetric(
+vertical: 15,
+horizontal: 40,
+),
+),
+child: const Text("Save Changes"),
+),
+],
+),
+),
+);
+}
 }
