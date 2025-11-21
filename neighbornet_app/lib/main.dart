@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:neighbornet_app/screens/signup_screen.dart';
+import 'package:provider/provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/signup_screen.dart';
 import 'screens/login_as_admin_screen.dart';
-import 'screens/login_as_police_screen.dart';
 import 'screens/user_home_screen.dart';
+import 'screens/login_as_police_screen.dart';
+import 'screens/admin/admin_dashboard_screen.dart';
+import 'theme_provider.dart';
 import 'screens/profile_screen.dart';
 
-
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -17,17 +24,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColor: const Color(0xFF5279C7),
+        scaffoldBackgroundColor: const Color(0xFFE2EBF7),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: const Color(0xFF5279C7),
+        scaffoldBackgroundColor: const Color(0xFF1F1F1F),
+      ),
+      themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       initialRoute: '/',
       routes: {
         '/': (context) => const HomeScreen(),
         '/login': (context) => const LoginScreen(),
-        '/signup': (context)=> const SignupScreen(),
-        '/adminLogin': (context) => const LoginAsAdminScreen(),
-        '/policeLogin': (context) =>const LoginAsPoliceScreen(),
-        '/userHome': (context) => const UserHomeScreen(),
-        '/profile': (context) => ProfileScreen(),
+        '/signup': (context) => const SignupScreen(),
+        '/adminLogin': (context) => LoginAsAdminScreen(), // removed const
+        '/policeLogin': (context) => const LoginAsPoliceScreen(),
+        '/adminDashboard': (context) => const AdminDashboardScreen(),
+        '/userHome':(context)=>const UserHomeScreen(),
+        '/profile':(context)=>const ProfileScreen(),
       },
     );
   }
