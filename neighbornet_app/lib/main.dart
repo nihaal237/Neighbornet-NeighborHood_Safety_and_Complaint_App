@@ -5,6 +5,7 @@ import 'screens/login_screen.dart';
 import 'screens/login_as_admin_screen.dart';
 import 'screens/login_as_police_screen.dart';
 import 'screens/user_home_screen.dart';
+import 'screens/profile_screen.dart';
 
 
 void main() {
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/adminLogin': (context) => const LoginAsAdminScreen(),
         '/policeLogin': (context) =>const LoginAsPoliceScreen(),
         '/userHome': (context) => const UserHomeScreen(),
+        '/profile': (context) => ProfileScreen(),
       },
     );
   }
