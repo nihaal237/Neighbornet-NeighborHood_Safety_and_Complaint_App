@@ -13,6 +13,14 @@ class User(AbstractUser): #inherits from AbstractUser so we get hashed passwords
     phoneNo = models.CharField(max_length=15, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
 
+    ROLE_CHOICES=(
+        ('user','User'),
+        ('admin','Admin'),
+        ('police','Police'),
+    )
+
+    role=models.CharField(max_length=20,choices=ROLE_CHOICES,default='user')
+
     USERNAME_FIELD = 'email' #overrides username field so we login with email instead 
     REQUIRED_FIELDS = ['username']
 
@@ -63,7 +71,6 @@ class Report(models.Model):
     longitude=models.FloatField(null=True, blank= True) #added longitude and latitude for the google map coordinates
     location = models.CharField(max_length=255,null=True, blank=True)
     isAnonymous = models.BooleanField(default=False)
-    isFake= models.BooleanField(default=False) #added isFake variable
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     assignedPolice = models.ForeignKey(LocalPoliceAuthority, on_delete=models.SET_NULL, null=True, blank=True)

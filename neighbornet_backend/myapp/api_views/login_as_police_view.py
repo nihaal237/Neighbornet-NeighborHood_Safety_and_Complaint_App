@@ -18,12 +18,28 @@ class LoginasPoliceAPIView(APIView):
         # Authenticate user
         user = authenticate(request, username=email, password=password)
 
-        if not user:
+        if user is None:
+         if not user:
             return Response(
                 {"error": "Invalid credentials"},
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
+        # 🔥 ROLE CHECK
+        if user.role != "police":
+            return Response(
+                {"error": "Not a police account"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # Check if user has police profile
+        try:
+            police_profile = user.police_profile
+        except LocalPoliceAuthority.DoesNotExist:
+            return Response(
+                {"error": "Police profile not found"},
+                status=status.HTTP_403_FORBIDDEN
+            )
         # Safe check for police profile
         if not hasattr(user, 'police_profile') or user.police_profile is None:
             return Response(
@@ -39,14 +55,5 @@ class LoginasPoliceAPIView(APIView):
         return Response({
             "refresh": str(refresh),
             "access": str(refresh.access_token),
-
-            # station info
             "police_station": police_profile.stationName,
-
-            # user info
-            "id": user.id,
-            "email": user.email,
-            "username": user.username,
-            "phoneNo": user.phoneNo,
-            "address": user.address,
         }, status=status.HTTP_200_OK)

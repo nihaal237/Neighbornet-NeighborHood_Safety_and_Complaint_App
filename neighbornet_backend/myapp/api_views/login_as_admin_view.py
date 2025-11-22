@@ -10,11 +10,17 @@ class LoginasAdminAPIView(APIView):
         password = request.data.get('password')
 
         user = authenticate(request, username=email, password=password)
-        if user:
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                "refresh": str(refresh),
-                "access": str(refresh.access_token),
-            }, status=status.HTTP_200_OK)
-        else:
+
+        if user is None:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # 🔥 ROLE CHECK
+        if user.role != "admin":
+            return Response({"error": "Not an admin account"}, status=status.HTTP_403_FORBIDDEN)
+
+        # If admin → generate tokens
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }, status=status.HTTP_200_OK)
