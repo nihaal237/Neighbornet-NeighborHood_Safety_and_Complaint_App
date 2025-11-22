@@ -20,13 +20,13 @@ Widget build(BuildContext context) {
           Icon(Icons.color_lens, color: Colors.white),
           SizedBox(width: 10),
           Text(
-            "🌓  Select Theme",
+            "Select Theme",
             style: TextStyle(
               fontSize: 26,              // Same size as Report Alert
               fontWeight: FontWeight.w600,
               letterSpacing: 1.5,        // Same spacing
               color: Colors.white,
-              fontStyle: FontStyle.italic,
+              fontStyle: FontStyle.normal,
             ),
           ),
         ],

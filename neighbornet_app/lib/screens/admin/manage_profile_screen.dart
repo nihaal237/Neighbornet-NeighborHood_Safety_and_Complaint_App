@@ -103,13 +103,13 @@ Widget build(BuildContext context) {
     backgroundColor: const Color(0xFFE2EBF7),
     appBar: AppBar(
       title: const Text(
-        '🛠 Manage Profile', 
+        'Manage Profile', 
         style: TextStyle(
           fontSize: 26, 
           fontWeight: FontWeight.w600, 
           letterSpacing: 1.5,
           color: Colors.white,
-          fontStyle: FontStyle.italic,
+          fontStyle: FontStyle.normal,
         ),
       ),
       backgroundColor: const Color(0xFF5279C7),

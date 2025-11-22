@@ -11,6 +11,6 @@ class AdminViewUsersAPIView(APIView):
     """
 
     def get(self, request, *args, **kwargs):
-        users = User.objects.filter(role="user")   # 🔥 Filter only users
+        users = User.objects.all() 
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

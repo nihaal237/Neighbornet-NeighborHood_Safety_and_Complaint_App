@@ -88,7 +88,7 @@ class _PoliceUpdateProfileScreenState extends State<PoliceUpdateProfileScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
-        color: Color(0xFF1E4BA3), // darker rich blue to match app theme
+        color: const Color(0xFF5279C7), // match dashboard AppBar
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: child,
@@ -103,14 +103,14 @@ class _PoliceUpdateProfileScreenState extends State<PoliceUpdateProfileScreen> {
           "Manage Profile",
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF1E4BA3), // DARKER BRIGHT BLUE
+        backgroundColor: const Color(0xFF5279C7), // dashboard AppBar shade
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
 
-      backgroundColor: const Color(0xFFBFD9FF), // LIGHTER SOFT BLUE
+      backgroundColor: const Color(0xFFC7D8F5), // dashboard background shade
 
       body: Center(
         child: SingleChildScrollView(
@@ -131,7 +131,7 @@ class _PoliceUpdateProfileScreenState extends State<PoliceUpdateProfileScreen> {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundColor: Color(0xFF1E4BA3),
+                    backgroundColor: const Color(0xFF5279C7),
                     child: const Icon(Icons.person, size: 50, color: Colors.white),
                   ),
                   const SizedBox(height: 20),
@@ -140,7 +140,7 @@ class _PoliceUpdateProfileScreenState extends State<PoliceUpdateProfileScreen> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87
+                      color: Colors.black87,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -220,7 +220,7 @@ class _PoliceUpdateProfileScreenState extends State<PoliceUpdateProfileScreen> {
                           child: ElevatedButton(
                             onPressed: isLoading ? null : updateProfile,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF1E4BA3),
+                              backgroundColor: const Color(0xFF5279C7),
                               padding: const EdgeInsets.symmetric(vertical: 15),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -231,7 +231,7 @@ class _PoliceUpdateProfileScreenState extends State<PoliceUpdateProfileScreen> {
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white
+                                color: Colors.white,
                               ),
                             ),
                           ),

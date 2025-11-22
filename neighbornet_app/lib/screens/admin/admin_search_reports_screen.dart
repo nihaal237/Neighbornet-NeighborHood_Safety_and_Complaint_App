@@ -108,12 +108,12 @@ class _AdminSearchReportsScreenState extends State<AdminSearchReportsScreen> {
       backgroundColor: const Color(0xFFE8F0FE),
       appBar: AppBar(
         title: const Text(
-          '📄 User Reports',
+          'User Reports',
           style: TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
-            fontStyle: FontStyle.italic,
+            fontStyle: FontStyle.normal,
           ),
         ),
         backgroundColor: const Color(0xFF5279C7),

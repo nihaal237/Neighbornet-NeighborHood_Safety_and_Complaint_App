@@ -1,6 +1,7 @@
+import 'dart:math';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -10,8 +11,8 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -21,8 +22,105 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final String loginUrl = "http://127.0.0.1:8000/login/";
 
+  // Animation variables
+  late AnimationController controller;
+  List<Offset> positions = [];
+  List<double> sizes = [];
+  List<Offset> speeds = [];
+  final Random random = Random();
+
+  final List<IconData> icons = [
+    Icons.shield,
+    Icons.alarm,
+    Icons.location_on,
+    Icons.warning_rounded,
+    Icons.notifications_active,
+    Icons.security,
+    Icons.home,
+    Icons.people,
+    Icons.chat_bubble,
+    Icons.star,
+    Icons.favorite,
+    Icons.lightbulb,
+    Icons.mail,
+    Icons.message,
+    Icons.map,
+    Icons.local_police,
+    Icons.house,
+    Icons.group,
+    Icons.light_mode,
+    Icons.star_outline,
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 18),
+    )..addListener(_updatePositions);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _setupPositions();
+      controller.repeat();
+    });
+  }
+
+  void _setupPositions() {
+    final screen = MediaQuery.of(context).size;
+
+    sizes = List.generate(
+      icons.length,
+      (i) => 18.0 + (i % 8) * 2,
+    );
+
+    positions = List.generate(
+      icons.length,
+      (i) => Offset(
+        random.nextDouble() * screen.width,
+        random.nextDouble() * screen.height,
+      ),
+    );
+
+    speeds = List.generate(
+      icons.length,
+      (i) => Offset(
+        0.5 + (i % 4) * 0.2,
+        0.4 + (i % 3) * 0.15,
+      ),
+    );
+  }
+
+  void _updatePositions() {
+    final screen = MediaQuery.of(context).size;
+
+    setState(() {
+      for (int i = 0; i < positions.length; i++) {
+        double newX = positions[i].dx + speeds[i].dx;
+        double newY = positions[i].dy + speeds[i].dy;
+
+        if (newX > screen.width) newX = 0;
+        if (newY > screen.height) newY = 0;
+
+        positions[i] = Offset(newX, newY);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   Future<void> _login() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      setState(() {
+        _errorMessage = "Enter both email and password";
+      });
+      return;
+    }
 
     setState(() {
       _isLoading = true;
@@ -39,28 +137,24 @@ class _LoginScreenState extends State<LoginScreen> {
         }),
       );
 
+      setState(() => _isLoading = false);
+
+      final data = json.decode(response.body);
+
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        print("Login success: ${data['token'] ?? data}");
-        // Navigate to Home/Dashboard
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString("access", data["access"]);
         await prefs.setString("refresh", data["refresh"]);
 
         Navigator.pushReplacementNamed(context, '/userHome');
       } else {
-        final data = json.decode(response.body);
         setState(() {
           _errorMessage = data['error'] ?? "Login failed";
         });
       }
     } catch (e) {
       setState(() {
-        _errorMessage = "Something went wrong: $e";
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
+        _errorMessage = "Error connecting to server";
       });
     }
   }
@@ -69,129 +163,123 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFA5BCDF),
-      appBar: AppBar(
-        title: const Text("Login"),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context), // back to Home
-        ),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                const Text(
-                  "Login Account",
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
+      body: Stack(
+        children: [
+          // Animated floating icons
+          if (positions.isNotEmpty)
+            ...List.generate(icons.length, (i) {
+              return Positioned(
+                left: positions[i].dx,
+                top: positions[i].dy,
+                child: Icon(
+                  icons[i],
+                  size: sizes[i],
+                  color: Colors.white.withOpacity(0.23),
                 ),
-                const SizedBox(height: 40),
-                // Email
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: "Enter your email",
-                    labelText: "Email",
-                    prefixIcon: const Icon(Icons.email),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) return "Enter email";
-                    if (!value.contains("@")) return "Enter a valid email";
-                    return null;
-                  },
+              );
+            }),
+
+          // Login box
+          Center(
+            child: SingleChildScrollView(
+              child: Container(
+                width: 420,
+                padding: const EdgeInsets.all(25),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
                 ),
-                const SizedBox(height: 20),
-                // Password
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: _obscurePassword,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: "Enter your password",
-                    labelText: "Password",
-                    prefixIcon: const Icon(Icons.lock),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscurePassword
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Login Account",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 33, 45, 78),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
+                      textAlign: TextAlign.center,
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) return "Enter password";
-                  },
-                ),
-                const SizedBox(height: 20),
-                if (_errorMessage.isNotEmpty)
-                  Text(
-                    _errorMessage,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                const SizedBox(height: 30),
-                // Login button
-                _isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _login,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 18),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            backgroundColor: Colors.white,
-                          ),
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF5279C7),
-                            ),
-                          ),
+                    const SizedBox(height: 20),
+                    // Email field
+                    TextField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        labelText: "Email",
+                        prefixIcon: const Icon(Icons.email),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                const SizedBox(height: 15),
-                // Signup redirect
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/signup');
-                  },
-                  child: const Text(
-                    "Don't have an account? Sign Up",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
+                    ),
+                    const SizedBox(height: 15),
+                    // Password field
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: _obscurePassword,
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        prefixIcon: const Icon(Icons.lock),
+                        suffixIcon: IconButton(
+                          icon: Icon(_obscurePassword
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    if (_errorMessage.isNotEmpty)
+                      Text(
+                        _errorMessage,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _isLoading ? null : _login,
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 18),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          backgroundColor: const Color(0xFF5279C7),
+                        ),
+                        child: _isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text(
+                                "Login",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

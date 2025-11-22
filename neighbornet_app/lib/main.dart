@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:neighbornet_app/screens/police_report_screen.dart';
 import 'package:provider/provider.dart';
 import 'screens/signup_screen.dart';
 import 'screens/home_screen.dart';
@@ -14,6 +15,8 @@ import 'screens/user_create_community_post_screen.dart';
 import 'screens/police_dashboard_screen.dart';
 import 'screens/police_update_profile_screen.dart';
 import 'screens/police_alerts_screen.dart';
+import 'screens/police_communityboard_screen.dart';
+
 void main() {
   runApp(
     ChangeNotifierProvider(
@@ -48,7 +51,6 @@ class MyApp extends StatelessWidget {
         '/': (context) => const HomeScreen(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
-
         '/adminLogin': (context) => LoginAsAdminScreen(), // removed const
         '/policeLogin': (context) => const LoginAsPoliceScreen(),
         '/adminDashboard': (context) => const AdminDashboardScreen(),
@@ -77,6 +79,18 @@ class MyApp extends StatelessWidget {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
             builder: (_) => PoliceAlertsScreen(token: args['token']),
+          );
+        }
+        if (settings.name == '/policeReports') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (_) => PoliceReportsScreen(accessToken: args['token']),
+          );
+        }
+        if (settings.name == '/policeCommunityBoard') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (_) => PoliceCommunityBoardScreen(accessToken: args['token']),
           );
         }
         return null;

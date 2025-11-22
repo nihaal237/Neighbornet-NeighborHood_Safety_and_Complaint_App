@@ -5,6 +5,9 @@ from myapp.api_views.police_update_profile_view import *
 from myapp.api_views.signup_view import *
 from myapp.api_views.login_as_admin_view import *
 from myapp.api_views.login_as_police_view import *
+from myapp.api_views.police_update_profile_view import PoliceUpdateProfileAPIView
+from myapp.api_views.police_alert_view import PoliceAlertView
+from myapp.api_views.police_communitypost_view import *  
 from myapp.api_views.admin_alerts_view import *
 from myapp.api_views.admin_profile_view import AdminProfileAPIView
 from myapp.api_views.admin_manage_users_view import AdminManageUsersAPIView
@@ -39,6 +42,12 @@ from myapp.api_views.admin_highlight_posts_view import (
 from myapp.api_views.profile_view import *
 from myapp.api_views.users_community_posts_view import CommunityPostsAPIView
 from myapp.api_views.user_create_community_post_view import CreateCommunityPostAPIView
+from myapp.api_views.report_views import (
+    PoliceReportListAPIView,
+    PoliceReportDetailAPIView,
+    PoliceUpdateReportStatusAPIView
+)
+
 
 urlpatterns = [
     path('login/', LoginAPIView.as_view(), name='login-api'),
@@ -50,7 +59,12 @@ urlpatterns = [
     path('user/profile/',UserProfileAPIView.as_view(),name='user-profile'),
     path('user/profile/update',UpdateUserProfileAPIView.as_view(),name='profile-update'),
     path('profile/',UserProfileAPIView.as_view(),name='user-profile'),
+    path('police/update-profile/', PoliceUpdateProfileAPIView.as_view(), name='police-update-profile-api'),
+    path('api/police/alerts/', PoliceAlertView.as_view(), name='police-alerts'),
     path('profile/update/',UpdateUserProfileAPIView.as_view(),name='profile-update'),
+    path('police/reports/', PoliceReportListAPIView.as_view(), name='police-reports-list'),
+    path('police/reports/<int:pk>/', PoliceReportDetailAPIView.as_view(), name='police-reports-detail'),
+    path('police/reports/<int:pk>/status/', PoliceUpdateReportStatusAPIView.as_view(), name='police-update-report-status'),
     path('admin/alerts/', AdminAlertAPIView.as_view(), name='admin-alerts'),
     path('admin/alerts/<int:pk>/', AdminAlertAPIView.as_view()),  # for DELETE
     path('admin/profile/', AdminProfileAPIView.as_view(), name='admin-profile'),
@@ -67,4 +81,3 @@ urlpatterns = [
     path('community-posts/create/', CreateCommunityPostAPIView.as_view(), name='create-community-post')
 
 ]
-

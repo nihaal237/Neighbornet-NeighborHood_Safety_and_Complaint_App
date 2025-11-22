@@ -44,13 +44,13 @@ Widget build(BuildContext context) {
     backgroundColor: const Color(0xFFE2EBF7), 
     appBar: AppBar(
       title: const Text(
-        '👥 View All Users',
+        'View All Users',
         style: TextStyle(
           fontSize: 26,
           fontWeight: FontWeight.w600,
           letterSpacing: 1.5,
           color: Colors.white,
-          fontStyle: FontStyle.italic,
+          fontStyle: FontStyle.normal,
         ),
       ),
       backgroundColor: const Color(0xFF5279C7),
@@ -68,33 +68,107 @@ Widget build(BuildContext context) {
                     ),
                   )
                 : ListView.builder(
-                    itemCount: users.length,
-                    itemBuilder: (context, index) {
-                      final user = users[index];
-                      return Card(
-                        elevation: 5,
-                        shadowColor: Colors.black54,
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.all(16),
-                          title: Text(
-                            user["username"],
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: Text(
-                            "📧 ${user["email"]}\n📱 ${user["phoneNo"]}\n🏠 ${user["address"]}",
-                            style: const TextStyle(height: 1.5),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+  itemCount: users.length,
+  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+  itemBuilder: (context, index) {
+    final user = users[index];
+    
+    // Optional: Assign colors based on user role
+    Color roleColor;
+    String role = user['role'] ?? 'User';
+    switch (role.toLowerCase()) {
+      case 'admin':
+        roleColor = Colors.deepPurple;
+        break;
+      case 'police':
+        roleColor = Colors.blueAccent;
+        break;
+      default:
+        roleColor = Colors.green;
+    }
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: roleColor.withOpacity(0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(16),
+        leading: CircleAvatar(
+          radius: 28,
+          backgroundColor: roleColor.withOpacity(0.2),
+          child: Text(
+            user['username'][0].toUpperCase(),
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: roleColor,
+            ),
+          ),
+        ),
+        title: Text(
+          user['username'],
+          style: const TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E3A8A)),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                const Icon(Icons.email, size: 16, color: Colors.grey),
+                const SizedBox(width: 4),
+                Expanded(child: Text(user['email'])),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                const Icon(Icons.phone, size: 16, color: Colors.grey),
+                const SizedBox(width: 4),
+                Text(user['phoneNo'] ?? 'N/A'),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                const Icon(Icons.home, size: 16, color: Colors.grey),
+                const SizedBox(width: 4),
+                Expanded(child: Text(user['address'] ?? 'N/A')),
+              ],
+            ),
+          ],
+        ),
+        trailing: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: roleColor.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            role,
+            style: TextStyle(
+              color: roleColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
+  },
+)
+
       ),
     );
   }

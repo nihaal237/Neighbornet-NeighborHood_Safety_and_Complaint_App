@@ -5,7 +5,7 @@ from .models import User, Alert,Report,CommunityPost
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'phoneNo', 'address']
+        fields = ['id', 'username', 'email', 'phoneNo', 'address','role']
 
 
 class AlertSerializer(serializers.ModelSerializer):
