@@ -54,13 +54,13 @@ class _UserAlertsScreenState extends State<UserAlertsScreen> {
 
       appBar: AppBar(
         title: const Text(
-          '🚨 Top Alerts',
+          'Top Alerts',
           style: TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.w600,
             letterSpacing: 1.5,
             color: Colors.white,
-            fontStyle: FontStyle.italic,
+            fontStyle: FontStyle.normal,
           ),
         ),
         backgroundColor: const Color(0xFF5279C7),

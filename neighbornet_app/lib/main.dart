@@ -16,7 +16,7 @@ import 'screens/police_dashboard_screen.dart';
 import 'screens/police_update_profile_screen.dart';
 import 'screens/police_alerts_screen.dart';
 import 'screens/police_communityboard_screen.dart';
-import 'screens/user_alerts_screen.dart';
+import 'screens/user_alert_screens.dart';
 
 void main() {
   runApp(
@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
         '/profile':(context)=>const ProfileScreen(),
         '/communityBoard': (context) => CommunityBoardScreen(),
         '/createPost': (context) => const CreateCommunityPostScreen(),
-        '/alerts': (context) => const UserAlertsScreen(),
+        '/userAlerts': (context) => const UserAlertsScreen(),
         '/policeUpdateProfile': (context) => const PoliceUpdateProfileScreen(
               accessToken: '', // placeholder, replaced dynamically
               currentEmail: 'police@example.com',

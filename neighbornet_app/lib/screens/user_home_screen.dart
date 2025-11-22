@@ -75,7 +75,7 @@ class UserHomeScreen extends StatelessWidget {
               leading: const Icon(Icons.notifications),
               title: const Text("My Alerts"),
               onTap: () {
-                Navigator.pushNamed(context, '/alerts');
+                Navigator.pushNamed(context, '/userAlerts');
               },
             ),
 
@@ -125,7 +125,7 @@ class UserHomeScreen extends StatelessWidget {
                 _buildHomeCard(
                 icon: Icons.notifications,
                 label: "Alerts",
-                onTap: () => Navigator.pushNamed(context, '/alerts'),
+                onTap: () => Navigator.pushNamed(context, '/userAlerts'),
                 ),
                 _buildHomeCard(
                 icon: Icons.map,
