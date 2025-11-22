@@ -39,6 +39,7 @@ from myapp.api_views.admin_highlight_posts_view import (
 from myapp.api_views.profile_view import *
 from myapp.api_views.users_community_posts_view import CommunityPostsAPIView
 from myapp.api_views.user_create_community_post_view import CreateCommunityPostAPIView
+from myapp.api_views.user_alerts_view import UserAlertsAPIView
 
 urlpatterns = [
     path('login/', LoginAPIView.as_view(), name='login-api'),
@@ -62,7 +63,8 @@ urlpatterns = [
     path('admin/community-posts/', AdminListCommunityPostsAPIView.as_view(), name='admin-community-posts'),
     path('admin/community-posts/<int:post_id>/highlight/', AdminHighlightPostAPIView.as_view(), name='admin-highlight-post'),
     path('community-posts/', CommunityPostsAPIView.as_view(), name='community-posts'),
-    path('community-posts/create/', CreateCommunityPostAPIView.as_view(), name='create-community-post')
+    path('community-posts/create/', CreateCommunityPostAPIView.as_view(), name='create-community-post'),
+    path('alerts/', UserAlertsAPIView.as_view(), name='user-alerts')
 
 ]
 

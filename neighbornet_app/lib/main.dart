@@ -14,6 +14,7 @@ import 'screens/user_create_community_post_screen.dart';
 import 'screens/police_dashboard_screen.dart';
 import 'screens/police_update_profile_screen.dart';
 import 'screens/police_alerts_screen.dart';
+import 'screens/user_alerts_screen.dart';
 
 void main() {
   runApp(
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
         '/profile':(context)=>const ProfileScreen(),
         '/communityBoard': (context) => CommunityBoardScreen(),
         '/createPost': (context) => const CreateCommunityPostScreen(),
+        '/alerts': (context) => const UserAlertsScreen(),
 
         '/policeUpdateProfile': (context) => const PoliceUpdateProfileScreen(
               accessToken: '', // placeholder, replaced dynamically
