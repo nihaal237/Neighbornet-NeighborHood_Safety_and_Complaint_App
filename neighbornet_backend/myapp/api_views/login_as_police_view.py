@@ -19,7 +19,7 @@ class LoginasPoliceAPIView(APIView):
         user = authenticate(request, username=email, password=password)
 
         if user is None:
-        if not user:
+         if not user:
             return Response(
                 {"error": "Invalid credentials"},
                 status=status.HTTP_401_UNAUTHORIZED
