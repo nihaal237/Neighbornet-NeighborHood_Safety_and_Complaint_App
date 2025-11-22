@@ -65,4 +65,3 @@ urlpatterns = [
     path('community-posts/create/', CreateCommunityPostAPIView.as_view(), name='create-community-post')
 
 ]
-
