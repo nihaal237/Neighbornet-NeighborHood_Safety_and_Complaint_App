@@ -6,6 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'phoneNo', 'address']
+<<<<<<< HEAD
 
 
 class AlertSerializer(serializers.ModelSerializer):
@@ -46,3 +47,12 @@ class CommunityPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommunityPost
         fields = ['id', 'user', 'content', 'dateTime', 'isHighlighted']
+=======
+from .models import Alert
+
+class AlertSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Alert
+        fields = ['id', 'title', 'message', 'dateTime', 'priority', 'users']
+>>>>>>> origin/localpolice

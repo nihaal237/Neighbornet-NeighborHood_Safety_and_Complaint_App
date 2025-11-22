@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'police_dashboard_screen.dart';
 import 'package:http/http.dart' as http;
 
 class LoginAsPoliceScreen extends StatefulWidget {
@@ -37,9 +38,16 @@ class _LoginAsPoliceScreenState extends State<LoginAsPoliceScreen> {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        _showMessage("Login Successful!");
-        // Navigate to Police Dashboard if you have one
-        // Navigator.pushNamed(context, "/policeDashboard");
+        // Navigate to Police Dashboard and pass user info
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PoliceDashboardScreen(
+              accessToken: data['access'],
+              currentEmail: email,
+            ),
+          ),
+        );
       } else {
         _showMessage(data["error"] ?? "Login failed");
       }
@@ -83,7 +91,6 @@ class _LoginAsPoliceScreenState extends State<LoginAsPoliceScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-
                 // Email field
                 TextField(
                   controller: emailController,
@@ -96,7 +103,6 @@ class _LoginAsPoliceScreenState extends State<LoginAsPoliceScreen> {
                   ),
                 ),
                 const SizedBox(height: 15),
-
                 // Password field
                 TextField(
                   controller: passwordController,
@@ -109,7 +115,6 @@ class _LoginAsPoliceScreenState extends State<LoginAsPoliceScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-
                 // Login Button
                 SizedBox(
                   width: double.infinity,
@@ -117,8 +122,7 @@ class _LoginAsPoliceScreenState extends State<LoginAsPoliceScreen> {
                     onPressed: isLoading ? null : loginPolice,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 252, 252, 252),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 50, vertical: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
