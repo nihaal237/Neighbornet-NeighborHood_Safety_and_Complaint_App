@@ -67,13 +67,13 @@ class _AdminViewAlertsScreenState extends State<AdminViewAlertsScreen> {
       backgroundColor: const Color(0xFFA5BCDF),
       appBar: AppBar(
         title: const Text(
-          '🚨 All Alerts',
+          'All Alerts',
           style: TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.w600,
             letterSpacing: 1.5,
             color: Colors.white,
-            fontStyle: FontStyle.italic,
+            fontStyle: FontStyle.normal,
           ),
         ),
         backgroundColor: const Color(0xFF5279C7),
@@ -89,62 +89,76 @@ class _AdminViewAlertsScreenState extends State<AdminViewAlertsScreen> {
                   ),
                 )
               : ListView.builder(
-                  padding: const EdgeInsets.all(15),
-                  itemCount: alerts.length,
-                  itemBuilder: (context, index) {
-                    final alert = alerts[index];
-                    Color priorityColor;
-                    switch (alert["priority"]) {
-                      case "High":
-                        priorityColor = Colors.red;
-                        break;
-                      case "Mid":
-                        priorityColor = Colors.orange;
-                        break;
-                      default:
-                        priorityColor = Colors.green;
-                    }
+  padding: const EdgeInsets.all(15),
+  itemCount: alerts.length,
+  itemBuilder: (context, index) {
+    final alert = alerts[index];
+    Color priorityColor;
+    IconData priorityIcon;
 
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      elevation: 5,
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(15),
-                        title: Text(
-                          alert["title"],
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(alert["message"]),
-                        trailing: Wrap(
-                          spacing: 12,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 6),
-                              decoration: BoxDecoration(
-                                color: priorityColor.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                alert["priority"],
-                                style: TextStyle(
-                                    color: priorityColor,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => deleteAlert(alert['id']),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
+    switch (alert["priority"]) {
+      case "High":
+        priorityColor = Colors.red;
+        priorityIcon = Icons.warning_amber_rounded;
+        break;
+      case "Mid":
+        priorityColor = Colors.orange;
+        priorityIcon = Icons.report_problem;
+        break;
+      default:
+        priorityColor = Colors.green;
+        priorityIcon = Icons.check_circle_outline;
+    }
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: priorityColor.withOpacity(0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
+        border: Border(
+          left: BorderSide(
+            color: priorityColor,
+            width: 6, // priority indicator bar
+          ),
+        ),
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        leading: CircleAvatar(
+          radius: 22,
+          backgroundColor: priorityColor.withOpacity(0.2),
+          child: Icon(priorityIcon, color: priorityColor, size: 26),
+        ),
+        title: Text(
+          alert["title"],
+          style: const TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E3A8A)),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 6.0),
+          child: Text(
+            alert["message"],
+            style: const TextStyle(fontSize: 15),
+          ),
+        ),
+        trailing: IconButton(
+          icon: const Icon(Icons.delete, color: Colors.red),
+          onPressed: () => deleteAlert(alert['id']),
+        ),
+      ),
+    );
+  },
+),
+
     );
   }
 }

@@ -3,18 +3,23 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
+import 'package:intl/intl.dart';
 
 class PoliceCommunityBoardScreen extends StatefulWidget {
   final String accessToken;
 
-  const PoliceCommunityBoardScreen({Key? key, required this.accessToken}) : super(key: key);
+  const PoliceCommunityBoardScreen({Key? key, required this.accessToken})
+      : super(key: key);
 
   @override
-  State<PoliceCommunityBoardScreen> createState() => _CommunityBoardScreenState();
+  State<PoliceCommunityBoardScreen> createState() =>
+      _PoliceCommunityBoardScreenState();
 }
 
-class _CommunityBoardScreenState extends State<PoliceCommunityBoardScreen> {
+class _PoliceCommunityBoardScreenState
+    extends State<PoliceCommunityBoardScreen> {
   late Future<List<dynamic>> _postsFuture;
+  Map<int, bool> expandedMap = {}; // Handles card expansion
 
   @override
   void initState() {
@@ -22,36 +27,29 @@ class _CommunityBoardScreenState extends State<PoliceCommunityBoardScreen> {
     _postsFuture = getPosts(widget.accessToken);
   }
 
-  // Return base + endpoint depending on platform
   String getPostsUrl() {
-    if (kIsWeb) {
-      return 'http://127.0.0.1:8000/community-posts/'; // web / chrome
-    } else if (Platform.isAndroid) {
-      return 'http://10.0.2.2:8000/community-posts/'; // Android emulator
-    } else {
-      return 'http://127.0.0.1:8000/community-posts/'; // iOS simulator / desktop
-    }
+    if (kIsWeb) return 'http://127.0.0.1:8000/community-posts/';
+    if (Platform.isAndroid) return 'http://10.0.2.2:8000/community-posts/';
+    return 'http://127.0.0.1:8000/community-posts/';
   }
 
   Future<List<dynamic>> getPosts(String token) async {
-    final url = getPostsUrl();
     final response = await http.get(
-      Uri.parse(url),
+      Uri.parse(getPostsUrl()),
       headers: {
         'Content-Type': 'application/json',
-        if (token.isNotEmpty) 'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer ${widget.accessToken}',
       },
     );
 
+    final body = jsonDecode(response.body);
+
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      if (data is List) return data;
-      // If API wraps result, adapt here (e.g. { "results": [...] })
-      if (data is Map && data['results'] is List) return data['results'];
-      return [];
-    } else {
-      throw Exception('Failed to load posts (status ${response.statusCode})');
+      if (body is List) return body;
+      if (body is Map && body['results'] is List) return body['results'];
     }
+
+    throw Exception("Failed to load posts (Status ${response.statusCode})");
   }
 
   Future<void> _refresh() async {
@@ -61,150 +59,209 @@ class _CommunityBoardScreenState extends State<PoliceCommunityBoardScreen> {
     await _postsFuture;
   }
 
+  // ---------------------------------------------------------
+  // ⭐ NEW BEAUTIFUL DATE FORMATTER
+  // ---------------------------------------------------------
   String _formatDate(String? iso) {
-    if (iso == null) return '';
+    if (iso == null) return "Unknown date";
+
     try {
-      final dt = DateTime.parse(iso).toLocal();
-      // simple readable format: YYYY-MM-DD HH:MM
-      final y = dt.year.toString().padLeft(4, '0');
-      final m = dt.month.toString().padLeft(2, '0');
-      final d = dt.day.toString().padLeft(2, '0');
-      final hh = dt.hour.toString().padLeft(2, '0');
-      final mm = dt.minute.toString().padLeft(2, '0');
-      return '$y-$m-$d $hh:$mm';
+      final date = DateTime.parse(iso).toLocal();
+      return DateFormat("MMM dd, yyyy • hh:mm a").format(date);
     } catch (_) {
       return iso;
     }
   }
 
+  // BEAUTIFUL GRADIENT BORDER AROUND AVATAR
+  Widget _avatar(String username) {
+    return Container(
+      padding: const EdgeInsets.all(2),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFF1E3A8A),
+            Colors.blueAccent,
+          ],
+        ),
+      ),
+      child: CircleAvatar(
+        radius: 20,
+        backgroundColor: Colors.white,
+        child: Text(
+          username.isNotEmpty ? username[0].toUpperCase() : "?",
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1E3A8A),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------
+  // ⭐ COMMUNITY POST CARD
+  // ---------------------------------------------------------
+  Widget _buildPostCard(Map<String, dynamic> post, int index) {
+    final user = post['user'] ?? {};
+
+    final username =
+        post['username']?.toString().trim().isNotEmpty == true
+            ? post['username']
+            : (user['username'] ?? user['email'] ?? "Anonymous User");
+
+    final content = (post['content'] ?? "").toString();
+    final date = _formatDate(post['dateTime']);
+    final isHighlighted = post['isHighlighted'] == true;
+    final postId = post['id'];
+
+    expandedMap.putIfAbsent(postId, () => false);
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color:
+                isHighlighted ? Colors.amber.withOpacity(0.35) : Colors.black26,
+            blurRadius: isHighlighted ? 20 : 10,
+            spreadRadius: isHighlighted ? 3 : 1,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: () {
+            setState(() {
+              expandedMap[postId] = !(expandedMap[postId]!);
+            });
+          },
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // -----------------------------------
+                // HEADER SECTION
+                // -----------------------------------
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _avatar(username),
+                    const SizedBox(width: 12),
+
+                    // Username + Date
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            username,
+                            style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF1E3A8A),
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            date,
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    if (isHighlighted)
+                      const Icon(Icons.star_rounded,
+                          color: Colors.amber, size: 28),
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                // -----------------------------------
+                // CONTENT SECTION (EXPANDABLE)
+                // -----------------------------------
+                AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 300),
+                  crossFadeState: expandedMap[postId]!
+                      ? CrossFadeState.showSecond
+                      : CrossFadeState.showFirst,
+                  firstChild: Text(
+                    content.length > 120
+                        ? content.substring(0, 120) + "..."
+                        : content,
+                    style: const TextStyle(fontSize: 15, color: Colors.black87),
+                  ),
+                  secondChild: Text(
+                    content,
+                    style: const TextStyle(fontSize: 15),
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                // -----------------------------------
+                // EXPAND/COLLAPSE LABEL
+                // -----------------------------------
+                
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------
+  // MAIN BUILD
+  // ---------------------------------------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Community Board'),
-        backgroundColor: const Color(0xFF1E3A8A),
+        backgroundColor: const Color(0xFF5279C7),
       ),
       backgroundColor: const Color(0xFFC7D8F5),
+
       body: FutureBuilder<List<dynamic>>(
         future: _postsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: Color(0xFF1E3A8A)));
-          }
-
-          if (snapshot.hasError) {
-            return RefreshIndicator(
-              onRefresh: _refresh,
-              child: ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.red)),
-                  ),
-                ],
-              ),
+        builder: (context, snap) {
+          if (snap.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(color: Color(0xFF1E3A8A)),
             );
           }
 
-          final posts = snapshot.data ?? [];
-
-          if (posts.isEmpty) {
-            return RefreshIndicator(
-              onRefresh: _refresh,
-              child: ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                children: const [
-                  SizedBox(height: 120),
-                  Center(child: Text('No posts found.', style: TextStyle(fontSize: 16))),
-                ],
-              ),
+          if (snap.hasError) {
+            return Center(
+              child: Text("Error: ${snap.error}",
+                  style: const TextStyle(color: Colors.red, fontSize: 16)),
             );
           }
+
+          final posts = snap.data ?? [];
 
           return RefreshIndicator(
             onRefresh: _refresh,
+            color: const Color(0xFF1E3A8A),
             child: ListView.builder(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(14),
               itemCount: posts.length,
-              itemBuilder: (context, index) {
-                final post = posts[index] as Map<String, dynamic>;
-
-                // JSON structure from backend (example you shared):
-                // {
-                //   "id": 4,
-                //   "user": { "id":9, "username":"fatima", "email":"..." },
-                //   "content": "Keep your doors locked",
-                //   "dateTime": "2025-11-10T10:19:47.052005Z",
-                //   "isHighlighted": false
-                // }
-                final user = post['user'] as Map<String, dynamic>?;
-                final username = (post['username'] != null && post['username'].toString().trim().isNotEmpty)
-    ? post['username'].toString()
-    : (user != null && user['username'] != null && user['username'].toString().trim().isNotEmpty)
-        ? user['username'].toString()
-        : (user != null && user['email'] != null)
-            ? user['email'].toString()
-            : 'Anonymous User';
-
-// Use username if present, else email if present, else fallback to 'Anonymous User' 
-                final content = (post['content'] ?? '').toString();
-                final dateStr = _formatDate(post['dateTime']?.toString());
-
-                return Card(
-  margin: const EdgeInsets.symmetric(vertical: 8),
-  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-  elevation: 3,
-  child: Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 12.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            CircleAvatar(
-              radius: 18,
-              backgroundColor: const Color(0xFF1E3A8A),
-              child: Text(
-                username.isNotEmpty ? username[0].toUpperCase() : '?',
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    username,
-                    style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF1E3A8A)),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    dateStr,
-                    style: const TextStyle(
-                        color: Colors.black54, fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-            // ⭐ Star aligned to the right if highlighted
-            if (post['isHighlighted'] == true)
-              const Icon(Icons.star, color: Colors.amber, size: 24),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Text(content,
-            style: const TextStyle(fontSize: 15, color: Colors.black87)),
-      ],
-    ),
-  ),
-);
-
-              },
+              itemBuilder: (context, i) => _buildPostCard(posts[i], i),
             ),
           );
         },

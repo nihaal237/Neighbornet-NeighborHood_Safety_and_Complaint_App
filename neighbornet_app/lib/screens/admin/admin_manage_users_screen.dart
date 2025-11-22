@@ -88,7 +88,7 @@ class _AdminManageUsersScreenState extends State<AdminManageUsersScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF5279C7),
         title: const Text(
-          '❌ Manage Users with Rejected Reports',
+          'Manage Fake Users Identified by Police',
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w600,

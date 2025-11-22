@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 class PoliceReportsScreen extends StatefulWidget {
   final String accessToken;
@@ -14,8 +15,7 @@ class PoliceReportsScreen extends StatefulWidget {
 class _PoliceReportsScreenState extends State<PoliceReportsScreen> {
   List reports = [];
   bool isLoading = true;
-
-  Map<int, bool> showEvidences = {}; // Null-safe map
+  Map<int, bool> showEvidences = {}; // Track which report's evidences are shown
 
   @override
   void initState() {
@@ -24,67 +24,92 @@ class _PoliceReportsScreenState extends State<PoliceReportsScreen> {
   }
 
   Future<void> fetchReports() async {
-    final response = await http.get(
-      Uri.parse('http://127.0.0.1:8000/police/reports/'),
-      headers: {
-        'Authorization': 'Bearer ${widget.accessToken}',
-        'Content-Type': 'application/json',
-      },
-    );
+    try {
+      final response = await http.get(
+        Uri.parse('http://127.0.0.1:8000/police/reports/'),
+        headers: {
+          'Authorization': 'Bearer ${widget.accessToken}',
+          'Content-Type': 'application/json',
+        },
+      );
 
-    if (response.statusCode == 200) {
-      final fetchedReports = json.decode(response.body);
-      setState(() {
-        reports = fetchedReports;
-        for (var report in reports) {
-          showEvidences.putIfAbsent(report['id'], () => false);
-        }
-        isLoading = false;
-      });
-    } else {
+      if (response.statusCode == 200) {
+        final fetchedReports = json.decode(response.body) as List;
+        setState(() {
+          reports = fetchedReports;
+          for (var report in reports) {
+            showEvidences.putIfAbsent(report['id'], () => false);
+          }
+          isLoading = false;
+        });
+      } else {
+        setState(() => isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to load reports')),
+        );
+      }
+    } catch (e) {
       setState(() => isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to load reports')),
+        SnackBar(content: Text('Error fetching reports: $e')),
       );
     }
   }
 
   Future<void> updateStatus(int reportId, String newStatus) async {
-    final response = await http.patch(
-      Uri.parse('http://127.0.0.1:8000/police/reports/$reportId/status/'),
-      headers: {
-        'Authorization': 'Bearer ${widget.accessToken}',
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({"status": newStatus}),
-    );
-
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Status updated')),
+    try {
+      final response = await http.patch(
+        Uri.parse('http://127.0.0.1:8000/police/reports/$reportId/status/'),
+        headers: {
+          'Authorization': 'Bearer ${widget.accessToken}',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({"status": newStatus}),
       );
-      fetchReports();
-    } else {
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Status updated')),
+        );
+        fetchReports();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update status')),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to update status')),
+        SnackBar(content: Text('Error updating status: $e')),
       );
     }
   }
 
   Widget buildEvidence(dynamic e) {
-    final url = e['file_url'];
-    if (url == null) return const SizedBox.shrink();
+    final url = e['file_url'] ?? '';
+    if (url.isEmpty) return const SizedBox.shrink();
 
     if (url.endsWith('.jpg') || url.endsWith('.png')) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: Image.network(
-          url,
-          height: 120,
-          width: 120,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) =>
-              const Text("Error loading image"),
+      return GestureDetector(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (_) => Dialog(
+              child: InteractiveViewer(
+                child: Image.network(url, fit: BoxFit.contain),
+              ),
+            ),
+          );
+        },
+        child: Container(
+          margin: const EdgeInsets.only(right: 8),
+          child: Image.network(
+            url,
+            height: 100,
+            width: 100,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                const Text("Error loading image"),
+          ),
         ),
       );
     } else if (url.endsWith('.txt')) {
@@ -102,10 +127,7 @@ class _PoliceReportsScreenState extends State<PoliceReportsScreen> {
               color: Colors.grey[200],
               child: Text(
                 snapshot.data.toString(),
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF303030),
-                ),
+                style: const TextStyle(fontSize: 14, color: Color(0xFF303030)),
               ),
             );
           }
@@ -134,12 +156,9 @@ class _PoliceReportsScreenState extends State<PoliceReportsScreen> {
       appBar: AppBar(
         title: const Text(
           'Police Reports',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF1E3A8A),
+        backgroundColor: const Color(0xFF5279C7),
       ),
       backgroundColor: const Color(0xFFC7D8F5),
       body: isLoading
@@ -148,11 +167,7 @@ class _PoliceReportsScreenState extends State<PoliceReportsScreen> {
               ? const Center(
                   child: Text(
                     'No reports available',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF303030),
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF303030)),
                   ),
                 )
               : ListView.builder(
@@ -161,163 +176,98 @@ class _PoliceReportsScreenState extends State<PoliceReportsScreen> {
                   itemBuilder: (context, index) {
                     final report = reports[index];
                     final reportId = report['id'];
+
+                    // Safe access with defaults
+                    final title = report['title'] ?? 'No Title';
+                    final description = report['description'] ?? 'No Description';
+                    final location = report['location'] ?? 'N/A';
+                    final status = report['status'] ?? 'Pending';
+                    final userDisplay = report['user_display'] ?? 'Anonymous';
+                    final dateTime = report['dateTime'] != null
+                        ? DateTime.tryParse(report['dateTime'])
+                        : null;
+                    final formattedDate = dateTime != null
+                        ? DateFormat('dd MMM yyyy, hh:mm a').format(dateTime.toLocal())
+                        : "Unknown";
+                    final evidences = report['evidences'] ?? [];
+
                     return Card(
                       elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       margin: const EdgeInsets.symmetric(vertical: 8),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Report title left-aligned, bold, darker color
-                            Text(
-                              report['title'],
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF303030),
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              report['description'],
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Color(0xFF303030),
-                              ),
-                            ),
+                            Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF303030))),
                             const SizedBox(height: 4),
-                            Text(
-                              "Location: ${report['location'] ?? 'N/A'}",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black54,
-                              ),
-                            ),
+                            Text("User: $userDisplay | Date: $formattedDate", style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                            const SizedBox(height: 6),
+                            Text(description, style: const TextStyle(fontSize: 16, color: Color(0xFF303030))),
+                            const SizedBox(height: 4),
+                            Text("Location: $location", style: const TextStyle(fontSize: 14, color: Colors.black54)),
                             const SizedBox(height: 10),
-                            if (report['evidences'] != null &&
-                                report['evidences'].isNotEmpty)
+
+                            // Interactive evidences
+                            if (evidences.isNotEmpty)
                               Column(
                                 children: [
-                                  // Centered View Evidences button
                                   Center(
-                                    child: Container(
-                                      width: 200,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              const Color(0xFF1E3A8A),
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 12),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            showEvidences.putIfAbsent(
-                                                reportId, () => false);
-                                            showEvidences[reportId] =
-                                                !(showEvidences[reportId]!);
-                                          });
-                                        },
-                                        child: Text(
-                                          showEvidences[reportId] == true
-                                              ? "Hide Evidences"
-                                              : "View Evidences",
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white),
-                                        ),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(0xFF5279C7),
+                                        padding: const EdgeInsets.symmetric(vertical: 12),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          showEvidences[reportId] = !(showEvidences[reportId] ?? false);
+                                        });
+                                      },
+                                      child: Text(
+                                        showEvidences[reportId] == true ? "Hide Evidences" : "View Evidences",
+                                        style: const TextStyle(fontSize: 16, color: Colors.white),
                                       ),
                                     ),
                                   ),
                                   const SizedBox(height: 6),
                                   if (showEvidences[reportId] == true)
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: report['evidences']
-                                          .map<Widget>((e) => buildEvidence(e))
-                                          .toList(),
+                                    SizedBox(
+                                      height: 120,
+                                      child: ListView(
+                                        scrollDirection: Axis.horizontal,
+                                        children: evidences.map<Widget>((e) => buildEvidence(e)).toList(),
+                                      ),
                                     ),
                                   const SizedBox(height: 12),
-                                  // Status Change centered, white text + dropdown
+                                  // Status dropdown
                                   Center(
                                     child: Container(
                                       width: 220,
                                       padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF1E3A8A),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
+                                      decoration: BoxDecoration(color: const Color(0xFF5279C7), borderRadius: BorderRadius.circular(8)),
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
                                         children: [
-                                          const Text(
-                                            "Status Change",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
+                                          const Text("Status Change", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                                           const SizedBox(height: 6),
                                           Theme(
-                                            data: Theme.of(context).copyWith(
-                                              canvasColor:
-                                                  const Color(0xFF1E3A8A),
-                                            ),
+                                            data: Theme.of(context).copyWith(canvasColor: const Color(0xFF1E3A8A)),
                                             child: DropdownButton<String>(
                                               isExpanded: true,
-                                              value: report['status'],
+                                              value: status,
                                               iconEnabledColor: Colors.white,
-                                              dropdownColor:
-                                                  const Color(0xFF1E3A8A),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                              ),
+                                              dropdownColor: const Color(0xFF5279C7),
+                                              style: const TextStyle(color: Colors.white, fontSize: 16),
                                               items: const [
-                                                DropdownMenuItem(
-                                                    value: 'Pending',
-                                                    child: Text('Pending',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white))),
-                                                DropdownMenuItem(
-                                                    value: 'Processing',
-                                                    child: Text('Processing',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white))),
-                                                DropdownMenuItem(
-                                                    value: 'Verified',
-                                                    child: Text('Verified',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white))),
-                                                DropdownMenuItem(
-                                                    value: 'Resolved',
-                                                    child: Text('Resolved',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white))),
-                                                DropdownMenuItem(
-                                                    value: 'Rejected',
-                                                    child: Text('Rejected',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white))),
+                                                DropdownMenuItem(value: 'Pending', child: Text('Pending', style: TextStyle(color: Colors.white))),
+                                                DropdownMenuItem(value: 'Processing', child: Text('Processing', style: TextStyle(color: Colors.white))),
+                                                DropdownMenuItem(value: 'Verified', child: Text('Verified', style: TextStyle(color: Colors.white))),
+                                                DropdownMenuItem(value: 'Resolved', child: Text('Resolved', style: TextStyle(color: Colors.white))),
+                                                DropdownMenuItem(value: 'Rejected', child: Text('Rejected', style: TextStyle(color: Colors.white))),
                                               ],
                                               onChanged: (value) {
-                                                if (value != null) {
-                                                  updateStatus(reportId, value);
-                                                }
+                                                if (value != null) updateStatus(reportId, value);
                                               },
                                             ),
                                           ),

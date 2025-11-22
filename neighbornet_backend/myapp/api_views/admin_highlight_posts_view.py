@@ -9,9 +9,23 @@ class AdminListCommunityPostsAPIView(APIView):
     List all community posts for admin.
     """
     def get(self, request):
-        posts = CommunityPost.objects.all().order_by('-dateTime')
-        serializer = CommunityPostSerializer(posts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        posts = CommunityPost.objects.all().order_by(
+            "-isHighlighted",   # highlighted = True → comes first
+            "-dateTime"         # newest first
+        )
+
+        data = [
+            {
+                "id": post.id,
+                "content": post.content,
+                "isHighlighted": post.isHighlighted,
+                "dateTime": post.dateTime,
+                "username": post.user.username if post.user else "Anonymous user",
+            }
+            for post in posts
+        ]
+
+        return Response(data)
 
 
 class AdminHighlightPostAPIView(APIView):

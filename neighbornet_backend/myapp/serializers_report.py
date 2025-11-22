@@ -36,14 +36,10 @@ class EvidenceSerializer(serializers.ModelSerializer):
 
 
 class ReportSerializer(serializers.ModelSerializer):
-    """
-    Serializer for Report model including nested evidences and small user/police info.
-    `status` uses the StatusType choices to validate incoming values.
-    """
     evidences = EvidenceSerializer(many=True, read_only=True)
-    status = serializers.ChoiceField(choices=StatusType.choices)
     assigned_police = serializers.SerializerMethodField()
-    user_info = serializers.SerializerMethodField()
+    user = serializers.SerializerMethodField()
+    user_display = serializers.SerializerMethodField()
 
     class Meta:
         model = Report
@@ -57,34 +53,40 @@ class ReportSerializer(serializers.ModelSerializer):
             'longitude',
             'location',
             'isAnonymous',
-            'user_info',
+            'user',
+            'user_display',
             'assigned_police',
             'evidences',
         ]
-        read_only_fields = ['dateTime', 'user_info', 'evidences']
+
+    def get_user(self, obj):
+        user = getattr(obj, "user", None)
+        if user is None:
+            return None
+
+        return {
+            "id": getattr(user, "id", None),
+            "username": getattr(user, "username", None),
+            "email": getattr(user, "email", None),
+            "phoneNo": getattr(user, "phoneNo", None),
+        }
+
+    def get_user_display(self, obj):
+        user = getattr(obj, "user", None)
+        if user is None:
+            return "User: Anonymous"
+        username = getattr(user, "username", None)
+        if username:
+            return f"User: {username}"
+        return "User: Unknown"
 
     def get_assigned_police(self, obj):
-        """
-        Returns a compact representation of the assigned police authority.
-        """
-        if obj.assignedPolice:
-            p = obj.assignedPolice
-            return {
-                'id': p.id,
-                'stationName': p.stationName,
-                'user_email': p.user.email if p.user else None,
-            }
-        return None
+        police = getattr(obj, "assignedPolice", None)
+        if police is None:
+            return None
 
-    def get_user_info(self, obj):
-        """
-        Returns minimal info about the report creator (if present).
-        """
-        if obj.user:
-            return {
-                'id': obj.user.id,
-                'username': obj.user.username,
-                'email': obj.user.email,
-                'phoneNo': obj.user.phoneNo,
-            }
-        return None
+        return {
+            "id": getattr(police, "id", None),
+            "stationName": getattr(police, "stationName", None),
+            "user_email": getattr(police.user, "email", None) if police.user else None,
+        }

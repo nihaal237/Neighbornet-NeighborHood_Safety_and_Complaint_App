@@ -21,15 +21,15 @@ class PoliceDashboardScreen extends StatelessWidget {
           "NeighborNet Police Dashboard",
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF1E3A8A),
+        backgroundColor: const Color(0xFF5279C7),
       ),
 
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(color: Color(0xFF1E3A8A)),
+            DrawerHeader( 
+              decoration: const BoxDecoration(color: const Color(0xFF5279C7)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

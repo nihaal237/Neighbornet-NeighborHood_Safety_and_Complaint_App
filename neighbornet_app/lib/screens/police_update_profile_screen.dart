@@ -88,7 +88,7 @@ class _PoliceUpdateProfileScreenState extends State<PoliceUpdateProfileScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E3A8A), // match dashboard AppBar
+        color: const Color(0xFF5279C7), // match dashboard AppBar
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: child,
@@ -103,7 +103,7 @@ class _PoliceUpdateProfileScreenState extends State<PoliceUpdateProfileScreen> {
           "Manage Profile",
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF1E3A8A), // dashboard AppBar shade
+        backgroundColor: const Color(0xFF5279C7), // dashboard AppBar shade
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -131,7 +131,7 @@ class _PoliceUpdateProfileScreenState extends State<PoliceUpdateProfileScreen> {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundColor: const Color(0xFF1E3A8A),
+                    backgroundColor: const Color(0xFF5279C7),
                     child: const Icon(Icons.person, size: 50, color: Colors.white),
                   ),
                   const SizedBox(height: 20),
@@ -220,7 +220,7 @@ class _PoliceUpdateProfileScreenState extends State<PoliceUpdateProfileScreen> {
                           child: ElevatedButton(
                             onPressed: isLoading ? null : updateProfile,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF1E3A8A),
+                              backgroundColor: const Color(0xFF5279C7),
                               padding: const EdgeInsets.symmetric(vertical: 15),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),

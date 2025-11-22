@@ -137,7 +137,7 @@ class _LoginAsAdminScreenState extends State<LoginAsAdminScreen>
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        _showMessage("Login Successful!");
+        ///_showMessage("Login Successful!");
         Navigator.pushReplacementNamed(context, '/adminDashboard');
       } else {
         _showMessage(data["error"] ?? "Login failed");
@@ -242,6 +242,7 @@ class _LoginAsAdminScreenState extends State<LoginAsAdminScreen>
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
+                                  color:Colors.white,
                                 ),
                               ),
                       ),

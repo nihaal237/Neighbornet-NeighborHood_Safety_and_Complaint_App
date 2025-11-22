@@ -69,13 +69,13 @@ Widget build(BuildContext context) {
           Icon(Icons.add_alert, color: Colors.white),
           SizedBox(width: 10),
           Text(
-            "🛡️  Report an Alert",
+            "Report an Alert",
             style: TextStyle(
               fontSize: 26,          
               fontWeight: FontWeight.w600, 
               letterSpacing: 1.5,     
               color: Colors.white,    
-              fontStyle: FontStyle.italic, 
+              fontStyle: FontStyle.normal, 
             ),
           ),
         ],
@@ -126,9 +126,13 @@ Widget build(BuildContext context) {
                 label: _isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
                     : const Text(
-                        "Submit Alert",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
+            "Submit Alert",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white, // move inside TextStyle
+            ),
+          ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF5279C7),
                   padding: const EdgeInsets.symmetric(vertical: 18),

@@ -75,7 +75,7 @@ class _PoliceAlertsScreenState extends State<PoliceAlertsScreen> {
             fontSize: 20,
           ),
         ),
-        backgroundColor: const Color(0xFF1E3A8A),
+        backgroundColor: const Color(0xFF5279C7),
       ),
       backgroundColor: const Color(0xFFC7D8F5), // same as dashboard
       body: FutureBuilder<List<dynamic>>(
@@ -84,7 +84,7 @@ class _PoliceAlertsScreenState extends State<PoliceAlertsScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(
-                color: Color(0xFF1E3A8A),
+                color: const Color(0xFF5279C7),
               ),
             );
           } else if (snapshot.hasError) {
