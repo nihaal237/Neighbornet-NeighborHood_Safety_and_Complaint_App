@@ -49,6 +49,8 @@ urlpatterns = [
     path('api/police/alerts/', PoliceAlertView.as_view(), name='police-alerts'),
     path('user/profile/',UserProfileAPIView.as_view(),name='user-profile'),
     path('user/profile/update',UpdateUserProfileAPIView.as_view(),name='profile-update'),
+    path('profile/',UserProfileAPIView.as_view(),name='user-profile'),
+    path('profile/update/',UpdateUserProfileAPIView.as_view(),name='profile-update'),
     path('admin/alerts/', AdminAlertAPIView.as_view(), name='admin-alerts'),
     path('admin/alerts/<int:pk>/', AdminAlertAPIView.as_view()),  # for DELETE
     path('admin/profile/', AdminProfileAPIView.as_view(), name='admin-profile'),
