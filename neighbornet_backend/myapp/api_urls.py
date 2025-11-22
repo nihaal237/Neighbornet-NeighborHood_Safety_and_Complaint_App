@@ -43,8 +43,8 @@ urlpatterns = [
     path('signup/', SignupAPIView.as_view(),name='signup-api'),
     path('admin/login/',LoginasAdminAPIView.as_view(),name='login-as-admin-api'),
     path('police/login/', LoginasPoliceAPIView.as_view(), name='login-as-police-api'),
-    path('user/profile/',UserProfileAPIView.as_view(),name='user-profile'),
-    path('user/profile/update',UpdateUserProfileAPIView.as_view(),name='profile-update'),
+    path('profile/',UserProfileAPIView.as_view(),name='user-profile'),
+    path('profile/update/',UpdateUserProfileAPIView.as_view(),name='profile-update'),
     path('admin/alerts/', AdminAlertAPIView.as_view(), name='admin-alerts'),
     path('admin/alerts/<int:pk>/', AdminAlertAPIView.as_view()),  # for DELETE
     path('admin/profile/', AdminProfileAPIView.as_view(), name='admin-profile'),
