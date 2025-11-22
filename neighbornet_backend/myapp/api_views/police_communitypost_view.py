@@ -14,13 +14,20 @@ class PoliceCommunityBoardView(APIView):
     permission_classes = [IsAuthenticated]  # Only logged-in users can access
 
     def get(self, request):
-        try:
-            # Make sure field names match your model: 'isHighlighted' and 'dateTime'
-            posts = CommunityPost.objects.all().order_by('-isHighlighted', '-dateTime')
-            serializer = CommunityPostSerializer(posts, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response(
-                {"error": f"Could not fetch posts: {str(e)}"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        posts = CommunityPost.objects.all().order_by(
+            "-isHighlighted",   # highlighted = True → comes first
+            "-dateTime"         # newest first
+        )
+
+        data = [
+            {
+                "id": post.id,
+                "content": post.content,
+                "isHighlighted": post.isHighlighted,
+                "dateTime": post.dateTime,
+                "username": post.user.username if post.user else "Anonymous user",
+            }
+            for post in posts
+        ]
+
+        return Response(data)

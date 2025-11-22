@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
 
-class CommunityBoardScreen extends StatefulWidget {
+class PoliceCommunityBoardScreen extends StatefulWidget {
   final String accessToken;
 
-  const CommunityBoardScreen({Key? key, required this.accessToken}) : super(key: key);
+  const PoliceCommunityBoardScreen({Key? key, required this.accessToken}) : super(key: key);
 
   @override
-  State<CommunityBoardScreen> createState() => _CommunityBoardScreenState();
+  State<PoliceCommunityBoardScreen> createState() => _CommunityBoardScreenState();
 }
 
-class _CommunityBoardScreenState extends State<CommunityBoardScreen> {
+class _CommunityBoardScreenState extends State<PoliceCommunityBoardScreen> {
   late Future<List<dynamic>> _postsFuture;
 
   @override
@@ -25,11 +25,11 @@ class _CommunityBoardScreenState extends State<CommunityBoardScreen> {
   // Return base + endpoint depending on platform
   String getPostsUrl() {
     if (kIsWeb) {
-      return 'http://127.0.0.1:8000/api/community/posts/'; // web / chrome
+      return 'http://127.0.0.1:8000/community-posts/'; // web / chrome
     } else if (Platform.isAndroid) {
-      return 'http://10.0.2.2:8000/api/community/posts/'; // Android emulator
+      return 'http://10.0.2.2:8000/community-posts/'; // Android emulator
     } else {
-      return 'http://127.0.0.1:8000/api/community/posts/'; // iOS simulator / desktop
+      return 'http://127.0.0.1:8000/community-posts/'; // iOS simulator / desktop
     }
   }
 
@@ -139,56 +139,71 @@ class _CommunityBoardScreenState extends State<CommunityBoardScreen> {
                 //   "isHighlighted": false
                 // }
                 final user = post['user'] as Map<String, dynamic>?;
-                final username = user != null ? (user['username'] ?? user['email'] ?? 'Unknown') : 'Unknown';
+                final username = (post['username'] != null && post['username'].toString().trim().isNotEmpty)
+    ? post['username'].toString()
+    : (user != null && user['username'] != null && user['username'].toString().trim().isNotEmpty)
+        ? user['username'].toString()
+        : (user != null && user['email'] != null)
+            ? user['email'].toString()
+            : 'Anonymous User';
+
+// Use username if present, else email if present, else fallback to 'Anonymous User' 
                 final content = (post['content'] ?? '').toString();
                 final dateStr = _formatDate(post['dateTime']?.toString());
 
                 return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  elevation: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 18,
-                              backgroundColor: const Color(0xFF1E3A8A),
-                              child: Text(username.isNotEmpty ? username[0].toUpperCase() : '?', style: const TextStyle(color: Colors.white)),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(username, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1E3A8A))),
-                                  const SizedBox(height: 2),
-                                  Text(dateStr, style: const TextStyle(color: Colors.black54, fontSize: 12)),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Text(content, style: const TextStyle(fontSize: 15, color: Colors.black87)),
-                        const SizedBox(height: 8),
-                        // optional: highlight styling
-                        if (post['isHighlighted'] == true)
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.orange.shade50,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: const Text('Highlighted', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w600)),
-                          ),
-                      ],
-                    ),
+  margin: const EdgeInsets.symmetric(vertical: 8),
+  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  elevation: 3,
+  child: Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 12.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: const Color(0xFF1E3A8A),
+              child: Text(
+                username.isNotEmpty ? username[0].toUpperCase() : '?',
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    username,
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF1E3A8A)),
                   ),
-                );
+                  const SizedBox(height: 2),
+                  Text(
+                    dateStr,
+                    style: const TextStyle(
+                        color: Colors.black54, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            // ⭐ Star aligned to the right if highlighted
+            if (post['isHighlighted'] == true)
+              const Icon(Icons.star, color: Colors.amber, size: 24),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Text(content,
+            style: const TextStyle(fontSize: 15, color: Colors.black87)),
+      ],
+    ),
+  ),
+);
+
               },
             ),
           );

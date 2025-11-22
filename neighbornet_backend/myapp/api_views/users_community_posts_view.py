@@ -18,7 +18,7 @@ class CommunityPostsAPIView(APIView):
                 "content": post.content,
                 "isHighlighted": post.isHighlighted,
                 "dateTime": post.dateTime,
-                "username": post.user.username if post.user else "Deleted User",
+                "username": post.user.username if post.user else "Anonymous user",
             }
             for post in posts
         ]

@@ -97,7 +97,7 @@ class _CommunityBoardScreenState extends State<CommunityBoardScreen> {
                 children: [
                     // Username
                     Text(
-                    post['username'] ?? "Unknown User",
+                    post['username'] ?? "Anonymous User",
                     style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,

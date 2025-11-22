@@ -84,7 +84,7 @@ class PoliceDashboardScreen extends StatelessWidget {
                     iconColor: Colors.black,
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CommunityBoardScreen(accessToken: accessToken)),
+                      MaterialPageRoute(builder: (context) => PoliceCommunityBoardScreen(accessToken: accessToken)),
                     ),
                   ),
                   _drawerTile(
@@ -145,7 +145,7 @@ class PoliceDashboardScreen extends StatelessWidget {
                 label: "Community Board",
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CommunityBoardScreen(accessToken: accessToken)),
+                  MaterialPageRoute(builder: (context) => PoliceCommunityBoardScreen(accessToken: accessToken)),
                 ),
               ),
               _homeCard(

@@ -57,7 +57,6 @@ class ReportSerializer(serializers.ModelSerializer):
             'longitude',
             'location',
             'isAnonymous',
-            'isFake',
             'user_info',
             'assigned_police',
             'evidences',

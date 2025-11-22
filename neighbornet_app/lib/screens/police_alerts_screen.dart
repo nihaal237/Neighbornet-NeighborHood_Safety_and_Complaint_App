@@ -49,6 +49,20 @@ class _PoliceAlertsScreenState extends State<PoliceAlertsScreen> {
     }
   }
 
+  // Helper function to get color based on priority
+  Color getPriorityColor(String priority) {
+    switch (priority.toLowerCase()) {
+      case 'high':
+        return Colors.red;
+      case 'mid':
+        return Colors.yellow[800]!; // nice yellow
+      case 'low':
+        return Colors.green;
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,6 +109,8 @@ class _PoliceAlertsScreenState extends State<PoliceAlertsScreen> {
             itemCount: alerts.length,
             itemBuilder: (context, index) {
               final alert = alerts[index];
+              final priority = alert['priority'] ?? '';
+
               return Card(
                 color: Colors.white,
                 elevation: 4,
@@ -108,8 +124,8 @@ class _PoliceAlertsScreenState extends State<PoliceAlertsScreen> {
                     alert['title'] ?? '',
                     style: const TextStyle(
                       fontSize: 17,
-                      fontWeight: FontWeight.w600, // bold
-                      color: Color(0xFF1E3A8A), // dashboard theme color
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF1E3A8A),
                     ),
                   ),
                   subtitle: Text(
@@ -119,13 +135,13 @@ class _PoliceAlertsScreenState extends State<PoliceAlertsScreen> {
                   trailing: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.redAccent.withOpacity(0.2),
+                      color: getPriorityColor(priority).withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      alert['priority'] ?? '',
-                      style: const TextStyle(
-                        color: Colors.redAccent,
+                      priority,
+                      style: TextStyle(
+                        color: getPriorityColor(priority),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
