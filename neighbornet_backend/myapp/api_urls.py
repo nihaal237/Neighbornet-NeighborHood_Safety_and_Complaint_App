@@ -40,6 +40,9 @@ from myapp.api_views.profile_view import *
 from myapp.api_views.users_community_posts_view import CommunityPostsAPIView
 from myapp.api_views.user_create_community_post_view import CreateCommunityPostAPIView
 from myapp.api_views.user_alerts_view import UserAlertsAPIView
+from myapp.api_views.user_submit_report_view import SubmitReportAPIView
+from myapp.api_views.user_view_reports_view import UserReportsAPIView
+
 
 urlpatterns = [
     path('login/', LoginAPIView.as_view(), name='login-api'),
@@ -64,7 +67,9 @@ urlpatterns = [
     path('admin/community-posts/<int:post_id>/highlight/', AdminHighlightPostAPIView.as_view(), name='admin-highlight-post'),
     path('community-posts/', CommunityPostsAPIView.as_view(), name='community-posts'),
     path('community-posts/create/', CreateCommunityPostAPIView.as_view(), name='create-community-post'),
-    path('alerts/', UserAlertsAPIView.as_view(), name='user-alerts')
+    path('alerts/', UserAlertsAPIView.as_view(), name='user-alerts'),
+    path('reports/create/', SubmitReportAPIView.as_view(), name='submit-report'),
+    path("reports/my/", UserReportsAPIView.as_view(), name="user-my-reports"),
 
 ]
 

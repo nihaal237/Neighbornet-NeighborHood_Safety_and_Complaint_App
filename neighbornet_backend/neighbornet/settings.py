@@ -67,7 +67,8 @@ STATIC_URL = '/static/'
 # STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR, 'global_static'),  # if you have project-level static files
 # ]
-
+MEDIA_URL = '/evidences/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'evidences')
 ROOT_URLCONF = 'neighbornet.urls'
 
 TEMPLATES = [

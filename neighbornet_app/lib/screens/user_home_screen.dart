@@ -115,7 +115,7 @@ class UserHomeScreen extends StatelessWidget {
                 _buildHomeCard(
                 icon: Icons.list_alt,
                 label: "My Reports",
-                onTap: () => Navigator.pushNamed(context, '/reportHistory'),
+                onTap: () =>  Navigator.pushNamed(context, '/reportHistory'),
                 ),
                 _buildHomeCard(
                 icon: Icons.group,
