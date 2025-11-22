@@ -46,7 +46,7 @@ class Admin(models.Model):
 # Local Police Authority
 
 class LocalPoliceAuthority(models.Model):
-    user = models.OneToOneField( User, on_delete=models.SET_NULL, null=True,blank=True, related_name="police_profile")
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="police_profile")
     stationName = models.CharField(max_length=255)
     
     def __str__(self):

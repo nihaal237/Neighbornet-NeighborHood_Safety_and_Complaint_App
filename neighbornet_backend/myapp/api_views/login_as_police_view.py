@@ -19,6 +19,7 @@ class LoginasPoliceAPIView(APIView):
         user = authenticate(request, username=email, password=password)
 
         if user is None:
+        if not user:
             return Response(
                 {"error": "Invalid credentials"},
                 status=status.HTTP_401_UNAUTHORIZED
@@ -39,6 +40,14 @@ class LoginasPoliceAPIView(APIView):
                 {"error": "Police profile not found"},
                 status=status.HTTP_403_FORBIDDEN
             )
+        # Safe check for police profile
+        if not hasattr(user, 'police_profile') or user.police_profile is None:
+            return Response(
+                {"error": "User is not registered as a police officer"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        police_profile = user.police_profile
 
         # Generate JWT tokens
         refresh = RefreshToken.for_user(user)

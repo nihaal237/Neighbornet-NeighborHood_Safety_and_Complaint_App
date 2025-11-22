@@ -3,6 +3,8 @@ from myapp.api_views.login_view import *
 from myapp.api_views.signup_view import *
 from myapp.api_views.login_as_admin_view import *
 from myapp.api_views.login_as_police_view import *
+from myapp.api_views.police_update_profile_view import PoliceUpdateProfileAPIView
+from myapp.api_views.police_alert_view import PoliceAlertView  
 from myapp.api_views.admin_alerts_view import *
 from myapp.api_views.admin_profile_view import AdminProfileAPIView
 from myapp.api_views.admin_manage_users_view import AdminManageUsersAPIView
@@ -44,6 +46,8 @@ urlpatterns = [
     path('admin/login/',LoginasAdminAPIView.as_view(),name='login-as-admin-api'),
     path('police/login/', LoginasPoliceAPIView.as_view(), name='login-as-police-api'),
     path('profile/',UserProfileAPIView.as_view(),name='user-profile'),
+    path('police/update-profile/', PoliceUpdateProfileAPIView.as_view(), name='police-update-profile-api'),
+    path('api/police/alerts/', PoliceAlertView.as_view(), name='police-alerts'),
     path('profile/update/',UpdateUserProfileAPIView.as_view(),name='profile-update'),
     path('admin/alerts/', AdminAlertAPIView.as_view(), name='admin-alerts'),
     path('admin/alerts/<int:pk>/', AdminAlertAPIView.as_view()),  # for DELETE
@@ -61,3 +65,4 @@ urlpatterns = [
     path('community-posts/create/', CreateCommunityPostAPIView.as_view(), name='create-community-post')
 
 ]
+
