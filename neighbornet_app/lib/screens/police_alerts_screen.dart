@@ -67,6 +67,10 @@ class _PoliceAlertsScreenState extends State<PoliceAlertsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
         title: const Text(
           'Alerts',
           style: TextStyle(
@@ -75,7 +79,7 @@ class _PoliceAlertsScreenState extends State<PoliceAlertsScreen> {
             fontSize: 20,
           ),
         ),
-        backgroundColor: const Color(0xFF5279C7),
+        backgroundColor: const Color.fromARGB(255, 19, 44, 83),
       ),
       backgroundColor: const Color(0xFFC7D8F5), // same as dashboard
       body: FutureBuilder<List<dynamic>>(

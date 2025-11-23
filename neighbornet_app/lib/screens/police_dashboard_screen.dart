@@ -19,9 +19,9 @@ class PoliceDashboardScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           "NeighborNet Police Dashboard",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 22, 22, 22)),
         ),
-        backgroundColor: const Color(0xFF5279C7),
+        backgroundColor: Color.fromARGB(255, 185, 205, 236),
       ),
 
       drawer: Drawer(
@@ -29,7 +29,7 @@ class PoliceDashboardScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader( 
-              decoration: const BoxDecoration(color: const Color(0xFF5279C7)),
+              decoration: const BoxDecoration(color: const Color.fromARGB(255, 19, 44, 83)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -112,7 +112,7 @@ class PoliceDashboardScreen extends StatelessWidget {
         ),
       ),
 
-      backgroundColor: const Color(0xFFC7D8F5),
+      backgroundColor: const Color.fromARGB(255, 19, 44, 83),
 
       body: Center(
         child: Padding(
@@ -189,7 +189,7 @@ class PoliceDashboardScreen extends StatelessWidget {
         width: 140,
         height: 140,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Color.fromARGB(255, 185, 205, 236),
           borderRadius: BorderRadius.circular(18),
           boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(3, 3))],
         ),

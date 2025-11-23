@@ -232,9 +232,22 @@ class _PoliceCommunityBoardScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Community Board'),
-        backgroundColor: const Color(0xFF5279C7),
-      ),
+  iconTheme: const IconThemeData(
+    color: Colors.white, // <-- makes back arrow white
+  ),
+  title: const Text(
+    'Community Board',
+    style: TextStyle(
+      color: Colors.white, // <-- makes title text white
+      fontSize: 26,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 1.5,
+    ),
+  ),
+  backgroundColor: const Color.fromARGB(255, 19, 44, 83),
+  elevation: 5,
+),
+
       backgroundColor: const Color(0xFFC7D8F5),
 
       body: FutureBuilder<List<dynamic>>(

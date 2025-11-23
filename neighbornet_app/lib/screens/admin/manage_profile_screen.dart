@@ -102,6 +102,9 @@ Widget build(BuildContext context) {
   return Scaffold(
     backgroundColor: const Color(0xFFE2EBF7),
     appBar: AppBar(
+      iconTheme: const IconThemeData(
+    color: Colors.white, // <-- BACK ARROW COLOR
+  ),
       title: const Text(
         'Manage Profile', 
         style: TextStyle(
@@ -112,7 +115,7 @@ Widget build(BuildContext context) {
           fontStyle: FontStyle.normal,
         ),
       ),
-      backgroundColor: const Color(0xFF5279C7),
+      backgroundColor: const Color.fromARGB(255, 19, 44, 83),
       elevation: 5,
     ),
       body: loading
@@ -125,7 +128,7 @@ Widget build(BuildContext context) {
                   width: MediaQuery.of(context).size.width > 500 ? 480 : double.infinity,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [Color(0xFF5279C7), Color(0xFF3E5BA6)],
+                      colors: [const Color.fromARGB(255, 19, 44, 83), const Color.fromARGB(255, 19, 44, 83)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neighbornet_app/screens/police_report_screen.dart';
+import 'package:neighbornet_app/screens/user_submit_report_screen.dart';
 import 'package:provider/provider.dart';
 import 'screens/signup_screen.dart';
 import 'screens/home_screen.dart';
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
         '/createPost': (context) => const CreateCommunityPostScreen(),
         '/userAlerts': (context) => const UserAlertsScreen(),
         '/userReports':(context)=>const ReportListScreen(),
+        '/submitReport':(context)=>const SubmitReportScreen(),
         '/policeUpdateProfile': (context) => const PoliceUpdateProfileScreen(
               accessToken: '', // placeholder, replaced dynamically
               currentEmail: 'police@example.com',

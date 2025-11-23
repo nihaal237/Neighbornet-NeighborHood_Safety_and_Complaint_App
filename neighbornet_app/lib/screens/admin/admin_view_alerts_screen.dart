@@ -65,20 +65,24 @@ class _AdminViewAlertsScreenState extends State<AdminViewAlertsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFA5BCDF),
-      appBar: AppBar(
-        title: const Text(
-          'All Alerts',
-          style: TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1.5,
-            color: Colors.white,
-            fontStyle: FontStyle.normal,
-          ),
-        ),
-        backgroundColor: const Color(0xFF5279C7),
-        elevation: 5,
-      ),
+     appBar: AppBar(
+  iconTheme: const IconThemeData(
+    color: Colors.white, // <-- BACK ARROW COLOR
+  ),
+  title: const Text(
+    'All Alerts',
+    style: TextStyle(
+      fontSize: 26,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 1.5,
+      color: Colors.white,
+      fontStyle: FontStyle.normal,
+    ),
+  ),
+  backgroundColor: const Color.fromARGB(255, 19, 44, 83),
+  elevation: 5,
+),
+
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : alerts.isEmpty

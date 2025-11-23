@@ -144,11 +144,8 @@ class _ReportListScreenState extends State<ReportListScreen> {
                           ],
                         ),
                         leading: CircleAvatar(
-                          backgroundColor: statusColor(report["status"]),
-                          child: const Icon(
-                            Icons.flag,
-                            color: Colors.white,
-                          ),
+                          backgroundColor: statusColor(report["status"] ?? ""),
+                          child: const Icon(Icons.flag, color: Colors.white),
                         ),
                         childrenPadding: const EdgeInsets.all(15),
                         children: [
@@ -163,7 +160,7 @@ class _ReportListScreenState extends State<ReportListScreen> {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 6, horizontal: 14),
                             decoration: BoxDecoration(
-                              color: statusColor(report["status"]),
+                              color: statusColor(report["status"] ?? ""),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
@@ -182,63 +179,72 @@ class _ReportListScreenState extends State<ReportListScreen> {
                           ),
                           const SizedBox(height: 8),
 
-                          // Evidence display
-                          ...report["evidences"].map<Widget>((ev) {
-                            final url = ev["file_url"];
-                            final isText = ev["is_text"];
+                          // SORT EVIDENCES: IMAGES FIRST, TEXT AFTER
+                          ...(() {
+                            final sorted = [...report["evidences"]];
+                            sorted.sort((a, b) {
+                              if (a["is_text"] == b["is_text"]) return 0;
+                              return a["is_text"] ? 1 : -1;
+                            });
+                            return sorted.map<Widget>((ev) {
+                              final url = ev["file_url"];
+                              final isText = ev["is_text"];
 
-                            return Container(
-                              margin: const EdgeInsets.only(bottom: 15),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: Colors.grey.shade300),
-                              ),
-                              child: isText
-                                  ? FutureBuilder(
-                                      future: loadTextFile(url),
-                                      builder: (context, snapshot) {
-                                        if (!snapshot.hasData) {
-                                          return const Padding(
-                                            padding: EdgeInsets.all(10),
-                                            child: Text("Loading text file..."),
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 15),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                      color: Colors.grey.shade300),
+                                ),
+                                child: isText
+                                    ? FutureBuilder(
+                                        future: loadTextFile(url),
+                                        builder: (context, snapshot) {
+                                          if (!snapshot.hasData) {
+                                            return const Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child:
+                                                  Text("Loading text file..."),
+                                            );
+                                          }
+                                          return Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Text(snapshot.data ?? ""),
                                           );
-                                        }
-                                        return Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Text(snapshot.data ?? ""),
-                                        );
-                                      },
-                                    )
-                                  : GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (_) =>
-                                                FullScreenImage(url: url),
+                                        },
+                                      )
+                                    : GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) =>
+                                                  FullScreenImage(url: url),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          height: 220,
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            color: Colors.grey[200],
                                           ),
-                                        );
-                                      },
-                                      child: Container(
-                                        height: 220,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          color: Colors.grey[200],
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          child: Image.network(
-                                            url,
-                                            fit: BoxFit.contain,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            child: Image.network(
+                                              url,
+                                              fit: BoxFit.contain,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                            );
-                          }).toList(),
+                              );
+                            }).toList();
+                          })(),
                         ],
                       ),
                     );

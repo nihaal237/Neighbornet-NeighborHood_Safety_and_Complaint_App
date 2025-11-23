@@ -155,7 +155,7 @@ class _LoginAsAdminScreenState extends State<LoginAsAdminScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFA5BCDF),
+      backgroundColor:  const Color.fromARGB(255, 19, 44, 83),
       body: Stack(
         children: [
           // 🌟 Floating Icons Background

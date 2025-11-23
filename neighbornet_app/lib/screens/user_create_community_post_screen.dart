@@ -72,9 +72,22 @@ class _CreateCommunityPostScreenState extends State<CreateCommunityPostScreen> {
       backgroundColor: const Color(0xFFA5BCDF),
 
       appBar: AppBar(
-        backgroundColor: const Color(0xFF5279C7),
-        title: const Text("Create Post"),
-      ),
+  backgroundColor: const Color.fromARGB(255, 19, 44, 83),
+  iconTheme: const IconThemeData(
+    color: Colors.white, // <-- MAKES THE ARROW WHITE
+  ),
+  title: const Text(
+    "Create Post",
+    style: TextStyle(
+      fontSize: 22,
+      fontWeight: FontWeight.w600,
+      color: Color.fromARGB(255, 240, 233, 233),
+    ),
+  ),
+),
+
+      
+      
 
       body: Padding(
         padding: const EdgeInsets.all(20),

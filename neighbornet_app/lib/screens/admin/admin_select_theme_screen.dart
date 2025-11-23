@@ -15,25 +15,29 @@ Widget build(BuildContext context) {
         : const Color(0xFFE2EBF7),
 
     appBar: AppBar(
-      title: Row(
-        children: const [
-          Icon(Icons.color_lens, color: Colors.white),
-          SizedBox(width: 10),
-          Text(
-            "Select Theme",
-            style: TextStyle(
-              fontSize: 26,              // Same size as Report Alert
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.5,        // Same spacing
-              color: Colors.white,
-              fontStyle: FontStyle.normal,
-            ),
-          ),
-        ],
+  iconTheme: const IconThemeData(
+    color: Colors.white, // <-- MAKES BACK ARROW WHITE
+  ),
+  title: Row(
+    children: const [
+      Icon(Icons.color_lens, color: Colors.white),
+      SizedBox(width: 10),
+      Text(
+        "Select Theme",
+        style: TextStyle(
+          fontSize: 26,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1.5,
+          color: Colors.white,
+          fontStyle: FontStyle.normal,
+        ),
       ),
-      backgroundColor: Color(0xFF5279C7),
-      elevation: 5,
-    ),
+    ],
+  ),
+  backgroundColor: const Color.fromARGB(255, 19, 44, 83),
+  elevation: 5,
+),
+
       body: Center(
         child: Card(
           elevation: 8,

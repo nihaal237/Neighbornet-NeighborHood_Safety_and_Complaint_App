@@ -18,7 +18,7 @@ class AdminDashboardScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 5,
-        backgroundColor: const Color(0xFF5279C7),
+        backgroundColor:  Color.fromARGB(255, 185, 205, 236),
         title: Row(
           children: [
             Container(
@@ -44,22 +44,14 @@ class AdminDashboardScreen extends StatelessWidget {
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.2,
-                color: Colors.white,
+                color: Color.fromARGB(255, 0, 0, 0),
                 shadows: [
                   Shadow(offset: Offset(1, 1), blurRadius: 2, color: Colors.black26),
                 ],
               ),
             ),
-            const SizedBox(width: 4),
-            const Text(
-              "Dashboard",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: Colors.white70,
-                letterSpacing: 1.0,
-              ),
-            ),
+           
+          
           ],
         ),
       ),
@@ -70,7 +62,7 @@ class AdminDashboardScreen extends StatelessWidget {
             DrawerHeader(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFF5279C7), Color(0xFF3E5BA6)],
+                  colors: [const Color.fromARGB(255, 19, 44, 83), Color(0xFF3E5BA6)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -195,7 +187,7 @@ class AdminDashboardScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFA5BCDF), Color(0xFFD7E1F3)],
+            colors: [const Color.fromARGB(255, 19, 44, 83), const Color.fromARGB(255, 19, 44, 83)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -328,7 +320,7 @@ class AdminDashboardScreen extends StatelessWidget {
         height: 160,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [Colors.white, Color(0xFFE7F0FA)],
+            colors: [Color.fromARGB(255, 185, 205, 236), Color.fromARGB(255, 185, 205, 236)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),

@@ -107,6 +107,9 @@ class _AdminSearchReportsScreenState extends State<AdminSearchReportsScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFE8F0FE),
       appBar: AppBar(
+        iconTheme: const IconThemeData(
+    color: Colors.white, // <-- BACK ARROW COLOR
+  ),
         title: const Text(
           'User Reports',
           style: TextStyle(
@@ -114,9 +117,10 @@ class _AdminSearchReportsScreenState extends State<AdminSearchReportsScreen> {
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
             fontStyle: FontStyle.normal,
+            color:Colors.white
           ),
         ),
-        backgroundColor: const Color(0xFF5279C7),
+        backgroundColor:  const Color.fromARGB(255, 19, 44, 83),
         elevation: 5,
       ),
       body: Padding(

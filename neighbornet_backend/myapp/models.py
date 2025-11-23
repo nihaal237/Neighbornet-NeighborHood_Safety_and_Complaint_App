@@ -85,7 +85,7 @@ class Evidence(models.Model):
         related_name='evidences',
         on_delete=models.CASCADE  # Delete all evidence if report is deleted
     )
-    file = models.FileField(upload_to='evidences/')
+    file = models.FileField(upload_to='')  # saves directly in MEDIA_ROOT
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

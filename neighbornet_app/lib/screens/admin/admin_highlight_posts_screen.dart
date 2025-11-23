@@ -194,7 +194,10 @@ class _AdminHighlightPostsScreenState extends State<AdminHighlightPostsScreen>
     return Scaffold(
       backgroundColor: const Color(0xFFA5BCDF),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF5279C7),
+        iconTheme: const IconThemeData(
+    color: Colors.white, // <-- BACK ARROW COLOR
+  ),
+        backgroundColor:  const Color.fromARGB(255, 19, 44, 83),
         elevation: 5,
         title: Row(
           children: const [

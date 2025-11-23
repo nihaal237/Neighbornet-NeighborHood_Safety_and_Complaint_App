@@ -90,3 +90,29 @@ class ReportSerializer(serializers.ModelSerializer):
             "stationName": getattr(police, "stationName", None),
             "user_email": getattr(police.user, "email", None) if police.user else None,
         }
+
+class SubmitReportSerializer(serializers.ModelSerializer):
+    evidences = serializers.ListField(
+        child=serializers.FileField(),
+        write_only=True,
+        min_length=2,
+        max_length=2
+    )
+
+    class Meta:
+        model = Report
+        fields = ["title", "description", "location", "latitude", "longitude", "evidences"]
+
+    def validate_evidences(self, value):
+        txt_count = sum(1 for f in value if f.name.endswith(".txt"))
+        img_count = sum(1 for f in value if f.name.lower().endswith((".jpg",".png")))
+        if txt_count != 1 or img_count != 1:
+            raise serializers.ValidationError("Exactly one text file and one image (jpg/png) required.")
+        return value
+
+    def create(self, validated_data):
+        files = validated_data.pop("evidences")
+        report = Report.objects.create(**validated_data, user=self.context["request"].user)
+        for f in files:
+            Evidence.objects.create(report=report, file=f)
+        return report

@@ -63,26 +63,29 @@ class _AdminCreateAlertScreenState extends State<AdminCreateAlertScreen> {
 Widget build(BuildContext context) {
   return Scaffold(
     backgroundColor: const Color(0xFFA5BCDF),
-    appBar: AppBar(
-      title: Row(
-        children: const [
-          Icon(Icons.add_alert, color: Colors.white),
-          SizedBox(width: 10),
-          Text(
-            "Report an Alert",
-            style: TextStyle(
-              fontSize: 26,          
-              fontWeight: FontWeight.w600, 
-              letterSpacing: 1.5,     
-              color: Colors.white,    
-              fontStyle: FontStyle.normal, 
-            ),
-          ),
-        ],
+   appBar: AppBar(
+  iconTheme: const IconThemeData(
+    color: Colors.white, // <-- MAKES THE BACK ARROW WHITE
+  ),
+  title: Row(
+    children: const [
+      Icon(Icons.add_alert, color: Colors.white),
+      SizedBox(width: 10),
+      Text(
+        "Report an Alert",
+        style: TextStyle(
+          fontSize: 26,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1.5,
+          color: Colors.white,
+        ),
       ),
-      backgroundColor: Color(0xFF5279C7),
-      elevation: 5,
-    ),
+    ],
+  ),
+  backgroundColor: const Color.fromARGB(255, 19, 44, 83),
+  elevation: 5,
+),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(

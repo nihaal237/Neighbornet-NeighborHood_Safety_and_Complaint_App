@@ -42,20 +42,24 @@ class _AdminViewAllUsersScreenState extends State<AdminViewAllUsersScreen> {
 Widget build(BuildContext context) {
   return Scaffold(
     backgroundColor: const Color(0xFFE2EBF7), 
-    appBar: AppBar(
-      title: const Text(
-        'View All Users',
-        style: TextStyle(
-          fontSize: 26,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 1.5,
-          color: Colors.white,
-          fontStyle: FontStyle.normal,
-        ),
-      ),
-      backgroundColor: const Color(0xFF5279C7),
-      elevation: 5,
+   appBar: AppBar(
+  iconTheme: const IconThemeData(
+    color: Colors.white, // <-- BACK ARROW COLOR
+  ),
+  title: const Text(
+    'View All Users',
+    style: TextStyle(
+      fontSize: 26,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 1.5,
+      color: Colors.white,
+      fontStyle: FontStyle.normal,
     ),
+  ),
+  backgroundColor: const Color.fromARGB(255, 19, 44, 83),
+  elevation: 5,
+),
+
       body: Container(
         padding: const EdgeInsets.all(20),
         child: isLoading
