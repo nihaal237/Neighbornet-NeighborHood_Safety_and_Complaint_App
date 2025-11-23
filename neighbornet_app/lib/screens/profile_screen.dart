@@ -118,8 +118,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Manage Profile"),
-        backgroundColor: const Color(0xFF5279C7),
+        title: const Text("Manage Profile",
+        style: TextStyle(color: Colors.white)), // ← White text
+        backgroundColor: const Color.fromARGB(255, 19, 44, 83),
+        iconTheme: const IconThemeData(
+    color: Colors.white, // ← Makes back arrow white
+  ),
+        
       ),
 
       body: _isLoading
@@ -192,13 +197,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       : ElevatedButton(
                           onPressed: _updateProfile,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF5279C7),
+                            backgroundColor:  const Color.fromARGB(255, 19, 44, 83),
                             padding: const EdgeInsets.symmetric(
                               vertical: 15,
                               horizontal: 40,
                             ),
                           ),
-                          child: const Text("Save Changes"),
+                          child: const Text("Save Changes",style: TextStyle(color: Colors.white)), // ← White text,
                         ),
                 ],
               ),

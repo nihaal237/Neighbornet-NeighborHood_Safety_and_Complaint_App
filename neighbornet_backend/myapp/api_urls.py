@@ -47,6 +47,8 @@ from myapp.api_views.report_views import (
     PoliceUpdateReportStatusAPIView
 )
 
+from myapp.api_views.user_view_reports import UserReportsView
+
 urlpatterns = [
     path('login/', LoginAPIView.as_view(), name='login-api'),
     path('signup/', SignupAPIView.as_view(),name='signup-api'),
@@ -74,5 +76,5 @@ urlpatterns = [
     path('community-posts/', CommunityPostsAPIView.as_view(), name='community-posts'),
     path('community-posts/create/', CreateCommunityPostAPIView.as_view(), name='create-community-post'),
     path('alerts/', UserAlertsAPIView.as_view(), name='user-alerts'),
-
+    path('userReports/',UserReportsView.as_view(),name='user-reports')
 ]

@@ -2,8 +2,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers_report import ReportSerializer
-from .models import Report
+from myapp.serializers_report import ReportSerializer
+from myapp.models import Report
 
 class UserReportsView(APIView):
     permission_classes = [IsAuthenticated]

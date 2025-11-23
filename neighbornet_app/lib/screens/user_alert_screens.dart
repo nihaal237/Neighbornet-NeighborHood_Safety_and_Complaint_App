@@ -63,8 +63,12 @@ class _UserAlertsScreenState extends State<UserAlertsScreen> {
             fontStyle: FontStyle.normal,
           ),
         ),
-        backgroundColor: const Color(0xFF5279C7),
+        backgroundColor: const Color.fromARGB(255, 19, 44, 83),
         elevation: 5,
+        iconTheme: const IconThemeData(
+    color: Colors.white, // ← Makes back arrow white
+  ),
+        
       ),
 
       body: _isLoading

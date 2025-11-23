@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFA5BCDF),
+      backgroundColor: const Color.fromARGB(255, 19, 44, 83),
       body: Stack(
         children: [
           // 🌟 ANIMATED BACKGROUND
@@ -74,11 +74,11 @@ class _HomeScreenState extends State<HomeScreen>
                       letterSpacing: 1.2,
                       shadows: [
                         Shadow(
-                            color: Color.fromARGB(66, 45, 36, 66),
+                            color: Color.fromARGB(255, 29, 76, 134),
                             offset: Offset(2, 2),
                             blurRadius: 4)
                       ],
-                      color: Color.fromARGB(255, 21, 25, 48),
+                      color: Color.fromARGB(255, 200, 203, 221),
                     ),
                   ),
 
@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen>
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
-                        color: Color.fromARGB(179, 15, 27, 30),
+                        color: Color.fromARGB(255, 215, 212, 223),
                         fontStyle: FontStyle.italic),
                   ),
 

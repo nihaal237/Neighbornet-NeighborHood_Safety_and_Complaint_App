@@ -8,7 +8,7 @@ class UserHomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("NeighborNet User Dashboard"),
-        backgroundColor: const Color(0xFF5279C7),
+        backgroundColor: Color.fromARGB(255, 185, 205, 236),
       ),
 
       drawer: Drawer(
@@ -16,14 +16,14 @@ class UserHomeScreen extends StatelessWidget {
           children: [
             DrawerHeader(
               decoration: const BoxDecoration(
-                color: Color(0xFF5279C7),
+                color: const Color.fromARGB(255, 19, 44, 83),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
                   CircleAvatar(
                     radius: 32,
-                    backgroundColor: Colors.white,
+                    backgroundColor: Color.fromARGB(255, 185, 205, 236),
                     child: Icon(Icons.person, size: 40, color: Color(0xFF5279C7)),
                   ),
                   SizedBox(height: 12),
@@ -59,7 +59,7 @@ class UserHomeScreen extends StatelessWidget {
               leading: const Icon(Icons.list_alt),
               title: const Text("View My Reports"),
               onTap: () {
-                Navigator.pushNamed(context, '/reportHistory');
+                Navigator.pushNamed(context, '/userReports');
               },
             ),
 
@@ -85,7 +85,7 @@ class UserHomeScreen extends StatelessWidget {
               leading: const Icon(Icons.logout, color: Colors.red),
               title: const Text("Logout", style: TextStyle(color: Colors.red)),
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/login');
+                Navigator.pushReplacementNamed(context, '/');
               },
             ),
           ],
@@ -94,7 +94,7 @@ class UserHomeScreen extends StatelessWidget {
 
       body: Container(
         padding: const EdgeInsets.all(20),
-        color: const Color(0xFFA5BCDF),
+        color: const Color.fromARGB(255, 19, 44, 83),
 
         child: Center(
             child: Wrap(
@@ -115,7 +115,7 @@ class UserHomeScreen extends StatelessWidget {
                 _buildHomeCard(
                 icon: Icons.list_alt,
                 label: "My Reports",
-                onTap: () => Navigator.pushNamed(context, '/reportHistory'),
+                onTap: () => Navigator.pushNamed(context, '/userReports'),
                 ),
                 _buildHomeCard(
                 icon: Icons.group,
@@ -153,7 +153,7 @@ class UserHomeScreen extends StatelessWidget {
         width: 140,   // smaller card width
         height: 140,  // smaller card height
         decoration: BoxDecoration(
-            color: Colors.white,
+            color:Color.fromARGB(255, 185, 205, 236),
             borderRadius: BorderRadius.circular(20),
             boxShadow: const [
             BoxShadow(

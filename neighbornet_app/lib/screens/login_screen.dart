@@ -162,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFA5BCDF),
+      backgroundColor: const Color.fromARGB(255, 19, 44, 83),
       body: Stack(
         children: [
           // Animated floating icons

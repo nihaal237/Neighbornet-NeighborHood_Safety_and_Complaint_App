@@ -83,7 +83,7 @@ class _CommunityBoardScreenState extends State<CommunityBoardScreen> {
                 width: 6,
                 height: 55,
                 decoration: BoxDecoration(
-                color: const Color(0xFF5279C7),
+                color: const Color.fromARGB(255, 19, 44, 83),
                 borderRadius: BorderRadius.circular(12),
                 ),
             ),
@@ -166,10 +166,10 @@ class _CommunityBoardScreenState extends State<CommunityBoardScreen> {
       backgroundColor: const Color(0xFFA5BCDF),
 
       appBar: AppBar(
-        backgroundColor: const Color(0xFF5279C7),
+        backgroundColor: const Color.fromARGB(255, 19, 44, 83),
         title: const Text(
             "Community Board",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600,color:const Color.fromARGB(255, 240, 233, 233)),
         ),
         actions: [
             IconButton(
@@ -180,6 +180,10 @@ class _CommunityBoardScreenState extends State<CommunityBoardScreen> {
             },
             ),
         ],
+        iconTheme: const IconThemeData(
+    color: Colors.white, // ← Makes back arrow white
+  ),
+        
         ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
