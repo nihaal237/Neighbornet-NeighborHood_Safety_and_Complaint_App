@@ -138,7 +138,6 @@ class _LoginScreenState extends State<LoginScreen>
       );
 
       setState(() => _isLoading = false);
-
       final data = json.decode(response.body);
 
       if (response.statusCode == 200) {
@@ -149,12 +148,12 @@ class _LoginScreenState extends State<LoginScreen>
         Navigator.pushReplacementNamed(context, '/userHome');
       } else {
         setState(() {
-          _errorMessage = data['error'] ?? "Login failed";
+          _errorMessage = data['error'] ?? "Invalid credentials";
         });
       }
     } catch (e) {
       setState(() {
-        _errorMessage = "Error connecting to server";
+        _errorMessage = "Unable to connect to server";
       });
     }
   }
@@ -174,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen>
                 child: Icon(
                   icons[i],
                   size: sizes[i],
-                  color: Colors.white.withOpacity(0.23),
+                  color: Colors.white.withOpacity(0.22),
                 ),
               );
             }),
@@ -188,21 +187,29 @@ class _LoginScreenState extends State<LoginScreen>
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(18),
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 12,
+                      color: Colors.black.withOpacity(0.2),
+                      offset: const Offset(0, 5),
+                    )
+                  ],
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
-                      "Login Account",
+                      "Welcome Back",
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 33, 45, 78),
                       ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
-                    // Email field
+
+                    // Email
                     TextField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
@@ -214,8 +221,10 @@ class _LoginScreenState extends State<LoginScreen>
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 15),
-                    // Password field
+
+                    // Password
                     TextField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
@@ -226,24 +235,46 @@ class _LoginScreenState extends State<LoginScreen>
                           icon: Icon(_obscurePassword
                               ? Icons.visibility
                               : Icons.visibility_off),
-                          onPressed: () {
-                            setState(() {
-                              _obscurePassword = !_obscurePassword;
-                            });
-                          },
+                          onPressed: () =>
+                              setState(() => _obscurePassword = !_obscurePassword),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+
+                    const SizedBox(height: 10),
+
+                    // Forgot Password Button
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, "/forgotPassword");
+                        },
+                        child: const Text(
+                          "Forgot Password?",
+                          style: TextStyle(
+                            color: Color(0xFF5279C7),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
                     if (_errorMessage.isNotEmpty)
                       Text(
                         _errorMessage,
-                        style: const TextStyle(color: Colors.red),
+                        style:
+                            const TextStyle(color: Colors.red, fontSize: 14),
                       ),
+
                     const SizedBox(height: 20),
+
+                    // Login button
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -257,8 +288,8 @@ class _LoginScreenState extends State<LoginScreen>
                         ),
                         child: _isLoading
                             ? const SizedBox(
-                                height: 20,
-                                width: 20,
+                                height: 22,
+                                width: 22,
                                 child: CircularProgressIndicator(
                                   color: Colors.white,
                                   strokeWidth: 2,

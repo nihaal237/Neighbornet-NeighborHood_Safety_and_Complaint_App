@@ -31,10 +31,13 @@ from myapp.api_views.user_view_reports import UserReportsView
 from myapp.api_views.user_submit_report_view import SubmitReportAPIView
 from myapp.api_views.user_view_crime_map import ReportLocationsAPIView
 from myapp.api_views.current_user import CurrentUserView
+from myapp.api_views.forget_password import *
 
 urlpatterns = [
     path('login/', LoginAPIView.as_view(), name='login-api'),
     path('signup/', SignupAPIView.as_view(),name='signup-api'),
+    path('auth/verify-identity/', VerifyIdentityView.as_view(),name='verify-identity'),
+    path('auth/reset-password/', ResetPasswordView.as_view(),name='reset-password'),
     path('admin/login/',LoginasAdminAPIView.as_view(),name='login-as-admin-api'),
     path('police/login/', LoginasPoliceAPIView.as_view(), name='login-as-police-api'),
     path('profile/',UserProfileAPIView.as_view(),name='user-profile'),

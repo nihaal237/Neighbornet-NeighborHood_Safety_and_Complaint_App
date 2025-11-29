@@ -86,7 +86,10 @@ class _AdminManageUsersScreenState extends State<AdminManageUsersScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFE2EBF7),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF5279C7),
+         iconTheme: const IconThemeData(
+    color: Colors.white, // <-- MAKES THE BACK ARROW WHITE
+  ),
+        backgroundColor:  const Color.fromARGB(255, 19, 44, 83),
         title: const Text(
           'Manage Fake Users Identified by Police',
           style: TextStyle(

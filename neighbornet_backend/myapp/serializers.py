@@ -53,3 +53,42 @@ class AlertSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alert
         fields = ['id', 'title', 'message', 'dateTime', 'priority', 'users']
+
+
+
+class VerifyIdentitySerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    phoneNo = serializers.CharField()
+
+    def validate(self, data):
+        email = data["email"]
+        phoneNo = data["phoneNo"]
+
+        try:
+            user = User.objects.get(email=email, phoneNo=phoneNo)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Invalid email or phone number")
+
+        data["user"] = user
+        return data
+    
+
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    new_password = serializers.CharField(min_length=6)
+
+    def validate(self, data):
+        try:
+            user = User.objects.get(email=data["email"])
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User not found")
+
+        data["user"] = user
+        return data
+
+    def save(self):
+        user = self.validated_data["user"]
+        user.set_password(self.validated_data["new_password"])
+        user.save()
+        return user
+

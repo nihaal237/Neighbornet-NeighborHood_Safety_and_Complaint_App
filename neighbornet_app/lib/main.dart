@@ -21,6 +21,8 @@ import 'screens/police/police_alerts_screen.dart';
 import 'screens/police/police_communityboard_screen.dart';
 import 'screens/user/user_alert_screens.dart';
 import 'screens/user/user_reports_screen.dart';
+import 'screens/forget_password_screen.dart';
+import 'screens/reset_password_screen.dart';
 
 void main() {
   runApp(
@@ -55,6 +57,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const HomeScreen(),
         '/login': (context) => const LoginScreen(),
+        '/forgotPassword': (context) => const ForgotPasswordScreen(),
+        '/resetPassword': (context) => const ResetPasswordScreen(),
         '/signup': (context) => const SignupScreen(),
         '/adminLogin': (context) => LoginAsAdminScreen(), 
         '/policeLogin': (context) => const LoginAsPoliceScreen(),
