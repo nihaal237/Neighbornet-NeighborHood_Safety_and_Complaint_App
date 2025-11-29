@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'admin_create_alert_screen.dart';
 import 'admin_view_alerts_screen.dart';
 import 'admin_manage_users_screen.dart';
 import 'admin_view_all_users_screen.dart';
 import 'manage_profile_screen.dart';
 import 'admin_search_reports_screen.dart';
-import '../login_screen.dart';
 import 'admin_select_theme_screen.dart'; 
 import 'admin_highlight_posts_screen.dart';
 
 class AdminDashboardScreen extends StatelessWidget {
+  
   const AdminDashboardScreen({super.key});
 
   @override
@@ -39,7 +38,7 @@ class AdminDashboardScreen extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             const Text(
-              "NeighborNet Admin",
+              "NeighborNet Admin Dashboard",
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -86,6 +85,7 @@ class AdminDashboardScreen extends StatelessWidget {
                       letterSpacing: 0.5,
                     ),
                   ),
+                  
                 ],
               ),
             ),

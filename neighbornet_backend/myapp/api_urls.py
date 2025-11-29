@@ -1,6 +1,7 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
+
 from myapp.api_views.login_view import *
 from myapp.api_views.signup_view import *
 from myapp.api_views.login_as_admin_view import *
@@ -13,44 +14,23 @@ from myapp.api_views.admin_profile_view import AdminProfileAPIView
 from myapp.api_views.admin_manage_users_view import AdminManageUsersAPIView
 from myapp.api_views.admin_view_users_view import AdminViewUsersAPIView
 from myapp.api_views.user_alerts_view import UserAlertsAPIView
-from myapp.api_views.admin_user_reports_view import (
-    AllReportsAPIView,
-    AnonymousReportsAPIView,
-    DeletedUserReportsAPIView,
-    SpecificUserReportsAPIView
-)
-from myapp.api_views.admin_highlight_posts_view import (
-    AdminListCommunityPostsAPIView,
-    AdminHighlightPostAPIView
-)
-
+from myapp.api_views.admin_user_reports_view import *
+from myapp.api_views.admin_highlight_posts_view import *
 from myapp.api_views.profile_view import*
 from myapp.api_views.admin_alerts_view import *
 from myapp.api_views.admin_profile_view import AdminProfileAPIView
 from myapp.api_views.admin_manage_users_view import AdminManageUsersAPIView
 from myapp.api_views.admin_view_users_view import AdminViewUsersAPIView
-from myapp.api_views.admin_user_reports_view import (
-    AllReportsAPIView,
-    AnonymousReportsAPIView,
-    DeletedUserReportsAPIView,
-    SpecificUserReportsAPIView
-)
-from myapp.api_views.admin_highlight_posts_view import (
-    AdminListCommunityPostsAPIView,
-    AdminHighlightPostAPIView
-)
-
+from myapp.api_views.admin_user_reports_view import *
+from myapp.api_views.admin_highlight_posts_view import *
 from myapp.api_views.profile_view import *
 from myapp.api_views.users_community_posts_view import CommunityPostsAPIView
 from myapp.api_views.user_create_community_post_view import CreateCommunityPostAPIView
-from myapp.api_views.report_views import (
-    PoliceReportListAPIView,
-    PoliceReportDetailAPIView,
-    PoliceUpdateReportStatusAPIView
-)
-
+from myapp.api_views.report_views import *
 from myapp.api_views.user_view_reports import UserReportsView
 from myapp.api_views.user_submit_report_view import SubmitReportAPIView
+from myapp.api_views.user_view_crime_map import ReportLocationsAPIView
+from myapp.api_views.current_user import CurrentUserView
 
 urlpatterns = [
     path('login/', LoginAPIView.as_view(), name='login-api'),
@@ -80,8 +60,9 @@ urlpatterns = [
     path('community-posts/create/', CreateCommunityPostAPIView.as_view(), name='create-community-post'),
     path('alerts/', UserAlertsAPIView.as_view(), name='user-alerts'),
     path('userReports/',UserReportsView.as_view(),name='user-reports'),
-    path('submitReport/',SubmitReportAPIView.as_view(),name='user-submit-report')
+    path('submitReport/',SubmitReportAPIView.as_view(),name='user-submit-report'),
+    path('reports/locations/',ReportLocationsAPIView.as_view(),name='user_view_crime_map'),
+    path('api/current-user/', CurrentUserView.as_view(), name='current-user'),
 ]
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

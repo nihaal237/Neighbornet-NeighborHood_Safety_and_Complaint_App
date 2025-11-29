@@ -84,8 +84,8 @@ class _PoliceReportsScreenState extends State<PoliceReportsScreen> {
     }
   }
 
-  Widget buildEvidence(dynamic e) {
-    final url = e['file_url'] ?? '';
+  Widget buildEvidence(Map<String, dynamic> e) {
+    final url = (e['file_url'] ?? '') as String;
     if (url.isEmpty) return const SizedBox.shrink();
 
     if (url.endsWith('.jpg') || url.endsWith('.png')) {
@@ -113,7 +113,7 @@ class _PoliceReportsScreenState extends State<PoliceReportsScreen> {
         ),
       );
     } else if (url.endsWith('.txt')) {
-      return FutureBuilder(
+      return FutureBuilder<String>(
         future: fetchTextFile(url),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -126,7 +126,7 @@ class _PoliceReportsScreenState extends State<PoliceReportsScreen> {
               margin: const EdgeInsets.symmetric(vertical: 4),
               color: Colors.grey[200],
               child: Text(
-                snapshot.data.toString(),
+                snapshot.data ?? '',
                 style: const TextStyle(fontSize: 14, color: Color(0xFF303030)),
               ),
             );
@@ -154,12 +154,19 @@ class _PoliceReportsScreenState extends State<PoliceReportsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Police Reports',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        backgroundColor: const Color(0xFF5279C7),
-      ),
+  title: const Text(
+    'Police Reports',
+    style: TextStyle(
+      fontWeight: FontWeight.bold,
+      color: Colors.white, // Title white
+    ),
+  ),
+  backgroundColor: const Color.fromARGB(255, 19, 44, 83), // Dark blue
+  iconTheme: const IconThemeData(
+    color: Colors.white, // Back arrow white
+  ),
+),
+
       backgroundColor: const Color(0xFFC7D8F5),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -167,7 +174,10 @@ class _PoliceReportsScreenState extends State<PoliceReportsScreen> {
               ? const Center(
                   child: Text(
                     'No reports available',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF303030)),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF303030)),
                   ),
                 )
               : ListView.builder(
@@ -187,47 +197,80 @@ class _PoliceReportsScreenState extends State<PoliceReportsScreen> {
                         ? DateTime.tryParse(report['dateTime'])
                         : null;
                     final formattedDate = dateTime != null
-                        ? DateFormat('dd MMM yyyy, hh:mm a').format(dateTime.toLocal())
+                        ? DateFormat('dd MMM yyyy, hh:mm a')
+                            .format(dateTime.toLocal())
                         : "Unknown";
                     final evidences = report['evidences'] ?? [];
 
+                    // Sort evidences: images first, then text
+                    final sortedEvidences = [
+                      ...evidences.where((e) {
+                        final url = (e['file_url'] ?? '') as String;
+                        return url.endsWith('.jpg') || url.endsWith('.png');
+                      }),
+                      ...evidences.where((e) {
+                        final url = (e['file_url'] ?? '') as String;
+                        return url.endsWith('.txt');
+                      }),
+                    ].toList();
+
                     return Card(
                       elevation: 5,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
                       margin: const EdgeInsets.symmetric(vertical: 8),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF303030))),
+                            Text(title,
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF303030))),
                             const SizedBox(height: 4),
-                            Text("User: $userDisplay | Date: $formattedDate", style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                            Text(
+                                "$userDisplay | Date: $formattedDate",
+                                style: const TextStyle(
+                                    fontSize: 12, color: Colors.grey)),
                             const SizedBox(height: 6),
-                            Text(description, style: const TextStyle(fontSize: 16, color: Color(0xFF303030))),
+                            Text(description,
+                                style: const TextStyle(
+                                    fontSize: 16, color: Color(0xFF303030))),
                             const SizedBox(height: 4),
-                            Text("Location: $location", style: const TextStyle(fontSize: 14, color: Colors.black54)),
+                            Text("Location: $location",
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.black54)),
                             const SizedBox(height: 10),
 
                             // Interactive evidences
-                            if (evidences.isNotEmpty)
+                            if (sortedEvidences.isNotEmpty)
                               Column(
                                 children: [
                                   Center(
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color(0xFF5279C7),
-                                        padding: const EdgeInsets.symmetric(vertical: 12),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        backgroundColor:
+                                            const Color.fromARGB(255, 19, 44, 83),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          showEvidences[reportId] = !(showEvidences[reportId] ?? false);
+                                          showEvidences[reportId] =
+                                              !(showEvidences[reportId] ?? false);
                                         });
                                       },
                                       child: Text(
-                                        showEvidences[reportId] == true ? "Hide Evidences" : "View Evidences",
-                                        style: const TextStyle(fontSize: 16, color: Colors.white),
+                                        showEvidences[reportId] == true
+                                            ? "Hide Evidences"
+                                            : "View Evidences",
+                                        style: const TextStyle(
+                                            fontSize: 16, color: Colors.white),
                                       ),
                                     ),
                                   ),
@@ -237,37 +280,79 @@ class _PoliceReportsScreenState extends State<PoliceReportsScreen> {
                                       height: 120,
                                       child: ListView(
                                         scrollDirection: Axis.horizontal,
-                                        children: evidences.map<Widget>((e) => buildEvidence(e)).toList(),
+                                        children: sortedEvidences
+                                            .map<Widget>(
+                                                (e) => buildEvidence(e))
+                                            .toList(),
                                       ),
                                     ),
                                   const SizedBox(height: 12),
+
                                   // Status dropdown
                                   Center(
                                     child: Container(
                                       width: 220,
                                       padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(color: const Color(0xFF5279C7), borderRadius: BorderRadius.circular(8)),
+                                      decoration: BoxDecoration(
+                                          color: const Color.fromARGB(255, 19, 44, 83),
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
                                       child: Column(
                                         children: [
-                                          const Text("Status Change", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                                          const Text("Status Change",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16)),
                                           const SizedBox(height: 6),
                                           Theme(
-                                            data: Theme.of(context).copyWith(canvasColor: const Color(0xFF1E3A8A)),
+                                            data: Theme.of(context).copyWith(
+                                                canvasColor:
+                                                    const Color(0xFF1E3A8A)),
                                             child: DropdownButton<String>(
                                               isExpanded: true,
                                               value: status,
                                               iconEnabledColor: Colors.white,
-                                              dropdownColor: const Color(0xFF5279C7),
-                                              style: const TextStyle(color: Colors.white, fontSize: 16),
+                                              dropdownColor:
+                                                  const Color.fromARGB(255, 19, 44, 83),
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16),
                                               items: const [
-                                                DropdownMenuItem(value: 'Pending', child: Text('Pending', style: TextStyle(color: Colors.white))),
-                                                DropdownMenuItem(value: 'Processing', child: Text('Processing', style: TextStyle(color: Colors.white))),
-                                                DropdownMenuItem(value: 'Verified', child: Text('Verified', style: TextStyle(color: Colors.white))),
-                                                DropdownMenuItem(value: 'Resolved', child: Text('Resolved', style: TextStyle(color: Colors.white))),
-                                                DropdownMenuItem(value: 'Rejected', child: Text('Rejected', style: TextStyle(color: Colors.white))),
+                                                DropdownMenuItem(
+                                                    value: 'Pending',
+                                                    child: Text('Pending',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white))),
+                                                DropdownMenuItem(
+                                                    value: 'Processing',
+                                                    child: Text('Processing',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white))),
+                                                DropdownMenuItem(
+                                                    value: 'Verified',
+                                                    child: Text('Verified',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white))),
+                                                DropdownMenuItem(
+                                                    value: 'Resolved',
+                                                    child: Text('Resolved',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white))),
+                                                DropdownMenuItem(
+                                                    value: 'Rejected',
+                                                    child: Text('Rejected',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white))),
                                               ],
                                               onChanged: (value) {
-                                                if (value != null) updateStatus(reportId, value);
+                                                if (value != null)
+                                                  updateStatus(reportId, value);
                                               },
                                             ),
                                           ),

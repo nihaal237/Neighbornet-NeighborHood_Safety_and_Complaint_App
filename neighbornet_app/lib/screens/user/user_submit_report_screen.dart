@@ -163,143 +163,152 @@ class _SubmitReportScreenState extends State<SubmitReportScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Submit Report"),
-        backgroundColor: const Color(0xFF5279C7),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Title
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: "Title",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // Description
-            TextField(
-              controller: _descController,
-              maxLines: 4,
-              decoration: const InputDecoration(
-                labelText: "Description",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // Manual location
-            TextField(
-              controller: _locationController,
-              decoration: const InputDecoration(
-                labelText: "Location (optional manual)",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // Map picker
-            SizedBox(
-              height: 300,
-              child: FlutterMap(
-                mapController: _mapController,
-                options: MapOptions(
-                  center: _lahoreLatLng,
-                  zoom: _currentZoom,
-                  minZoom: 10,
-                  maxZoom: 18,
-                  onTap: (tapPosition, point) {
-                    setState(() {
-                      pickedLocation = point;
-                    });
-                  },
-                ),
-                children: [
-                  TileLayer(
-                    urlTemplate:
-                        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                    subdomains: ['a', 'b', 'c'],
-                    userAgentPackageName: 'com.example.neighbornet_app',
-                  ),
-                  // Show marker at picked location
-                  if (pickedLocation != null)
-                    MarkerLayer(
-                      markers: [
-                        Marker(
-                          width: 80,
-                          height: 80,
-                          point: pickedLocation!,
-                          child: const Icon(
-                            Icons.location_pin,
-                            color: Colors.red,
-                            size: 40,
-                          ),
-                        ),
-                      ],
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
-
-            // Zoom buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(onPressed: _zoomIn, icon: const Icon(Icons.zoom_in)),
-                IconButton(onPressed: _zoomOut, icon: const Icon(Icons.zoom_out)),
-              ],
-            ),
-            const SizedBox(height: 12),
-
-            // TXT file picker
-            ElevatedButton(
-              onPressed: _pickTxtFile,
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF5279C7)),
-              child: const Text("Select TXT File"),
-            ),
-            if (txtFile != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Text("Selected TXT: ${txtFile!.name}"),
-              ),
-            const SizedBox(height: 8),
-
-            // Image file picker
-            ElevatedButton(
-              onPressed: _pickImageFile,
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF5279C7)),
-              child: const Text("Select Image (PNG / JPG)"),
-            ),
-            if (imgFile != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Text("Selected Image: ${imgFile!.name}"),
-              ),
-            const SizedBox(height: 20),
-
-            _isSubmitting
-                ? const Center(child: CircularProgressIndicator())
-                : ElevatedButton(
-                    onPressed: _submitReport,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF5279C7),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: const Text("Submit Report"),
-                  ),
-          ],
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text(
+        "Submit Report",
+        style: TextStyle(
+          color: Colors.white, // Title text color
+          fontWeight: FontWeight.bold,
         ),
       ),
-    );
-  }
+      backgroundColor: const Color.fromARGB(255, 19, 44, 83),
+      iconTheme: const IconThemeData(
+        color: Colors.white, // Back arrow color
+      ),
+    ),
+    body: SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Title
+          TextField(
+            controller: _titleController,
+            decoration: const InputDecoration(
+              labelText: "Title",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Description
+          TextField(
+            controller: _descController,
+            maxLines: 4,
+            decoration: const InputDecoration(
+              labelText: "Description",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Manual location
+          TextField(
+            controller: _locationController,
+            decoration: const InputDecoration(
+              labelText: "Location (optional manual)",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Map picker
+          SizedBox(
+            height: 300,
+            child: FlutterMap(
+              mapController: _mapController,
+              options: MapOptions(
+                center: _lahoreLatLng,
+                zoom: _currentZoom,
+                minZoom: 10,
+                maxZoom: 18,
+                onTap: (tapPosition, point) {
+                  setState(() {
+                    pickedLocation = point;
+                  });
+                },
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate:
+                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  subdomains: ['a', 'b', 'c'],
+                  userAgentPackageName: 'com.example.neighbornet_app',
+                ),
+                if (pickedLocation != null)
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        width: 80,
+                        height: 80,
+                        point: pickedLocation!,
+                        child: const Icon(
+                          Icons.location_pin,
+                          color: Colors.red,
+                          size: 40,
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          // Zoom buttons
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(onPressed: _zoomIn, icon: const Icon(Icons.zoom_in)),
+              IconButton(onPressed: _zoomOut, icon: const Icon(Icons.zoom_out)),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // TXT file picker
+          ElevatedButton(
+            onPressed: _pickTxtFile,
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF5279C7)),
+            child: const Text("Select TXT File"),
+          ),
+          if (txtFile != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Text("Selected TXT: ${txtFile!.name}"),
+            ),
+          const SizedBox(height: 8),
+
+          // Image file picker
+          ElevatedButton(
+            onPressed: _pickImageFile,
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF5279C7)),
+            child: const Text("Select Image (PNG / JPG)"),
+          ),
+          if (imgFile != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Text("Selected Image: ${imgFile!.name}"),
+            ),
+          const SizedBox(height: 20),
+
+          _isSubmitting
+              ? const Center(child: CircularProgressIndicator())
+              : ElevatedButton(
+                  onPressed: _submitReport,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF5279C7),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: const Text("Submit Report"),
+                ),
+        ],
+      ),
+    ),
+  );
+}
+
 }

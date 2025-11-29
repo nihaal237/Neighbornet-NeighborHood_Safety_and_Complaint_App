@@ -80,7 +80,7 @@ Widget build(BuildContext context) {
                   onChanged: (value) {
                     themeProvider.toggleTheme(value);
                   },
-                  activeColor: const Color(0xFF5279C7),
+                  activeThumbColor: const Color(0xFF5279C7),
                   secondary: const Icon(Icons.dark_mode, color: Color(0xFF5279C7)),
                 ),
               ],

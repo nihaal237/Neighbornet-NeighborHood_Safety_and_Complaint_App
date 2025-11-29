@@ -129,7 +129,7 @@ class _AdminSearchReportsScreenState extends State<AdminSearchReportsScreen> {
           children: [
             // Report type dropdown
             DropdownButtonFormField<String>(
-              value: selectedReportType,
+              initialValue: selectedReportType,
               decoration: InputDecoration(
                 labelText: "Select Report Type",
                 border: OutlineInputBorder(
@@ -160,7 +160,7 @@ class _AdminSearchReportsScreenState extends State<AdminSearchReportsScreen> {
             if (selectedReportType == "specific")
               DropdownButtonFormField<int>(
                 hint: const Text("Select a user"),
-                value: selectedUserId,
+                initialValue: selectedUserId,
                 decoration: InputDecoration(
                   labelText: "Select User",
                   border: OutlineInputBorder(

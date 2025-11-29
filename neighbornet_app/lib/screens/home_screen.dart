@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen>
                             offset: Offset(2, 2),
                             blurRadius: 4)
                       ],
-                      color: Color.fromARGB(255, 200, 203, 221),
+                      color:  Color.fromARGB(255, 215, 212, 223),
                     ),
                   ),
 
@@ -109,14 +109,14 @@ class _HomeScreenState extends State<HomeScreen>
                               horizontal: 40, vertical: 20),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
-                          backgroundColor: Colors.white,
+                          backgroundColor:  Color.fromARGB(255, 227, 224, 235),
                         ),
                         child: const Text(
                           "Login",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Color.fromRGBO(148, 179, 226, 1),
+                            color: Color.fromRGBO(37, 40, 45, 1),
                           ),
                         ),
                       ),
@@ -130,14 +130,14 @@ class _HomeScreenState extends State<HomeScreen>
                               horizontal: 40, vertical: 20),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
-                          backgroundColor: Colors.white,
+                          backgroundColor:  Color.fromARGB(255, 227, 224, 235),
                         ),
                         child: const Text(
                           "Signup",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Color.fromRGBO(148, 179, 226, 1),
+                            color: Color.fromRGBO(37, 40, 45, 1),
                           ),
                         ),
                       ),
@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen>
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        backgroundColor: Colors.white,
+                        backgroundColor:  Color.fromARGB(255, 227, 224, 235),
                       ),
                       child: const Text(
                         "Login as Admin",
@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen>
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        backgroundColor: Colors.white,
+                        backgroundColor:  Color.fromARGB(255, 227, 224, 235),
                       ),
                       child: const Text(
                         "Login as Police",
@@ -266,8 +266,8 @@ class _MovingIconsBackgroundState extends State<MovingIconsBackground>
     Icons.sos,
   ];
 
-  late List<Offset> positions;
-  late List<Offset> speeds;
+  late List<Offset> positions=[];
+  late List<Offset> speeds=[];
 
   late final List<double> sizes = List.generate(
     icons.length,
@@ -337,8 +337,6 @@ class _MovingIconsBackgroundState extends State<MovingIconsBackground>
 
   @override
   Widget build(BuildContext context) {
-    if (positions == null) return Container();
-
     return IgnorePointer(
       ignoring: true,
       child: Stack(

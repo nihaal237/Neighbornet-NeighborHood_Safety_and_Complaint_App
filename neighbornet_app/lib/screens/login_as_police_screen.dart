@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'police_dashboard_screen.dart';
+import 'police/police_dashboard_screen.dart';
 
 class LoginAsPoliceScreen extends StatefulWidget {
   const LoginAsPoliceScreen({super.key});

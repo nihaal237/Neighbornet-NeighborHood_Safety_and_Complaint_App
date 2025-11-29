@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'police_alerts_screen.dart';
-import 'police_report_screen.dart';
 import 'police_communityboard_screen.dart';
 
 class PoliceDashboardScreen extends StatelessWidget {
@@ -43,8 +42,7 @@ class PoliceDashboardScreen extends StatelessWidget {
                     "Welcome, Police",
                     style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 4),
-                  Text(currentEmail, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+                 
                 ],
               ),
             ),

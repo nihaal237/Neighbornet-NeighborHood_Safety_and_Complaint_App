@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:neighbornet_app/screens/police_report_screen.dart';
-import 'package:neighbornet_app/screens/user_submit_report_screen.dart';
+import 'package:neighbornet_app/screens/police/police_area_stats.dart';
+import 'package:neighbornet_app/screens/police/police_report_screen.dart';
+import 'package:neighbornet_app/screens/user/user_submit_report_screen.dart';
+import 'package:neighbornet_app/screens/user/user_view_crime_map.dart';
 import 'package:provider/provider.dart';
 import 'screens/signup_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/login_as_admin_screen.dart';
-import 'screens/user_home_screen.dart';
+import 'screens/user/user_home_screen.dart';
 import 'screens/login_as_police_screen.dart';
 import 'screens/admin/admin_dashboard_screen.dart';
 import 'theme_provider.dart';
-import 'screens/profile_screen.dart';
-import 'screens/user_community_board_screen.dart';
-import 'screens/user_create_community_post_screen.dart';
-import 'screens/police_dashboard_screen.dart';
-import 'screens/police_update_profile_screen.dart';
-import 'screens/police_alerts_screen.dart';
-import 'screens/police_communityboard_screen.dart';
-import 'screens/user_alert_screens.dart';
-import 'screens/user_reports_screen.dart';
+import 'screens/user/profile_screen.dart';
+import 'screens/user/user_community_board_screen.dart';
+import 'screens/user/user_create_community_post_screen.dart';
+import 'screens/police/police_dashboard_screen.dart';
+import 'screens/police/police_update_profile_screen.dart';
+import 'screens/police/police_alerts_screen.dart';
+import 'screens/police/police_communityboard_screen.dart';
+import 'screens/user/user_alert_screens.dart';
+import 'screens/user/user_reports_screen.dart';
 
 void main() {
   runApp(
@@ -54,7 +56,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const HomeScreen(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
-        '/adminLogin': (context) => LoginAsAdminScreen(), // removed const
+        '/adminLogin': (context) => LoginAsAdminScreen(), 
         '/policeLogin': (context) => const LoginAsPoliceScreen(),
         '/adminDashboard': (context) => const AdminDashboardScreen(),
         '/userHome':(context)=>const UserHomeScreen(),
@@ -64,12 +66,14 @@ class MyApp extends StatelessWidget {
         '/userAlerts': (context) => const UserAlertsScreen(),
         '/userReports':(context)=>const ReportListScreen(),
         '/submitReport':(context)=>const SubmitReportScreen(),
+        '/userMap':(context)=>const CrimeMapScreen(),
+        '/areaStats':(context)=>const CrimeMapScreenPolice(),
         '/policeUpdateProfile': (context) => const PoliceUpdateProfileScreen(
               accessToken: '', // placeholder, replaced dynamically
               currentEmail: 'police@example.com',
             ),
-        // Do NOT add PoliceDashboardScreen here because token/email are dynamic
       },
+      
       onGenerateRoute: (settings) {
         // Dynamic routing for screens that need token/email
         if (settings.name == '/policeDashboard') {
