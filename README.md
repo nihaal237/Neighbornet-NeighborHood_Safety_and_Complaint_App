@@ -13,7 +13,7 @@
     <li><strong>Version Control:</strong> Git &amp; GitHub</li>
   </ul>
 
-  <h2>Features</h2>
+  <h2>🚀 Features</h2>
   <ul>
     <li>User signup & login</li>
     <li>Submit and view complaints</li>
